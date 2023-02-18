@@ -1,16 +1,24 @@
 import {View, Dimensions} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Canvas,
   Group,
   LinearGradient,
+  mix,
   Paint,
   Path,
   Rect,
+  runSpring,
+  runTiming,
   Skia,
   SweepGradient,
   Text,
+  useComputedValue,
   useFont,
+  useLoop,
+  useSpring,
+  useTouchHandler,
+  useValue,
   vec,
 } from '@shopify/react-native-skia';
 import Process_Top_Button from './Process_Top_Button';
@@ -22,7 +30,40 @@ const path = Skia.Path.Make();
 path.addCircle(193, 247, 85);
 
 const Process_Neumorphism = () => {
-  const font = useFont(require('./Font/Roboto-Regular.ttf'), 28);
+  const font = useFont(require('../Font/Roboto-Regular.ttf'), 28);
+  const processValue = useValue(0);
+  const loop = useLoop({duration: 10000});
+  const x = useComputedValue(() => mix(loop.current, 0, 360), [loop]);
+  const progress = useComputedValue(() => x.current / 360, [x]);
+  const textPath = useComputedValue(
+    () => `${Math.floor(progress.current * 101)}° C`,
+    [progress],
+  );
+  const translateY = useValue(70);
+  const offsetY = useValue(0);
+  const onTouch = useTouchHandler({
+    onStart: touch => {
+      if (touch.y > 700 && offsetY.current === 0) {
+        offsetY.current = translateY.current - touch.y;
+      }
+    },
+
+    onActive: touch => {
+      if (offsetY.current < 0) {
+        translateY.current = offsetY.current + touch.y;
+      }
+    },
+    onEnd: touch => {
+      if (touch.y > 600) {
+        runTiming(translateY, {to: 70}, {duration: 500});
+        offsetY.current = 0;
+      }
+    },
+  });
+  const transformAnimated = useComputedValue(
+    () => [{translateY: translateY.current}],
+    [translateY],
+  );
   if (font === null) {
     return null;
   }
@@ -30,7 +71,9 @@ const Process_Neumorphism = () => {
     <Canvas
       style={{
         flex: 1,
-      }}>
+      }}
+      mode="continuous"
+      onTouch={onTouch}>
       <Rect x={0} y={0} width={width} height={height}>
         <LinearGradient
           colors={['#2A2D32', '#131313']}
@@ -70,8 +113,8 @@ const Process_Neumorphism = () => {
       <Group>
         <Process_Circle x={width / 2 - 200 / 2} y={150} size={168.2} />
         <Text
-          text={'30° C'}
-          x={width / 2 - 40}
+          text={textPath}
+          x={width / 2 - 38}
           y={260}
           font={font}
           color="white"
@@ -88,7 +131,7 @@ const Process_Neumorphism = () => {
             strokeWidth={15}
             strokeCap="round"
             strokeJoin={'round'}
-            end={0.4}
+            end={progress}
           />
         </Group>
       </Group>
@@ -134,8 +177,8 @@ const Process_Neumorphism = () => {
         </Group>
       </Group>
       {/*Setting */}
-      <Group>
-        <Bottom_Process x={0} y={400} width={width} height={148} />
+      <Group transform={transformAnimated}>
+        <Bottom_Process x={0} y={400} width={width} height={height} />
       </Group>
     </Canvas>
   );

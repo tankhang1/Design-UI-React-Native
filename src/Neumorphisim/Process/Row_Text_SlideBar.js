@@ -2,6 +2,7 @@ import {Group, Text, useFont} from '@shopify/react-native-skia';
 import {Dimensions} from 'react-native';
 import Icon_Process from './Icon_Process';
 import Process_Slide from './Process_Slide';
+
 const {width, height} = Dimensions.get('screen');
 const Row_Text_SlideBar = ({
   text,
@@ -10,7 +11,7 @@ const Row_Text_SlideBar = ({
   transIconX,
   transIconY,
 }) => {
-  const font = useFont(require('./Font/Roboto-Regular.ttf'), 18);
+  const font = useFont(require('../Font/Roboto-Regular.ttf'), 18);
   if (font === null) {
     return null;
   }
