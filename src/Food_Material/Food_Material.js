@@ -1,15 +1,27 @@
-import {View, Text, Dimensions, StatusBar} from 'react-native';
-import React from 'react';
 import {
-  Circle,
-  Path,
-  Svg,
+  View,
+  Text,
+  Dimensions,
+  StatusBar,
   Image,
-  G,
-  Defs,
-  ClipPath,
-  Mask,
-} from 'react-native-svg';
+  Pressable,
+} from 'react-native';
+import React from 'react';
+import {Circle, Path, Svg, G, Defs, ClipPath, Mask} from 'react-native-svg';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+  Swipeable,
+} from 'react-native-gesture-handler';
+import Animated, {
+  interpolate,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const {width, height} = Dimensions.get('screen');
 const roseFlowerLeft = [
   'M563.615 131.921C558.848 130.217 551.923 129.807 547.98 130.722C542.76 132.081 541.385 131.832 542.477 129.728C545.315 123.839 537.862 113.171 523.338 102.235C501.485 85.7628 489.967 80.5922 478.069 82.091C462.963 83.7959 443.614 84.3409 431.302 83.3503C418.024 82.2413 407.474 86.9037 399.637 97.6153C396.47 101.984 394.368 107.163 394.456 110.492L394.696 116.038L389.972 111.141C383.673 104.612 373.698 101.629 370.022 105.176C368.551 106.595 367.61 110.916 368.092 114.653C368.443 118.254 367.406 124.243 365.678 127.749C364.081 131.391 361.947 137.126 361.053 140.614C360.307 143.96 359.298 147.035 358.856 147.46C358.415 147.886 355.187 146.011 351.596 143.172C342.268 136.151 326.692 131.482 315.266 131.999L305.38 132.346L304.773 140.546C304.151 149.025 308.542 159.757 318.178 173.572C325.746 184.654 326.73 194.209 322.476 212.756C319.895 223.912 319.209 233.502 320.467 240.692C322.27 250.508 323.666 252.838 332.458 261.951C340.74 270.243 344.756 272.934 354.568 276.336C364.38 279.739 368.658 282.702 378.138 291.94C396.835 310.144 406.972 312.706 461.714 312.945C490.051 313.183 500.336 315.604 523.277 327.612C531.503 332.019 539.63 335.734 541.136 336.119C543.478 336.486 544.781 333.128 546.56 321.433C550.632 293.87 548.485 275.457 540.087 266.752L535.888 262.399L552.06 261.504C578.282 259.844 593.763 249.11 603.884 225.167C612.422 204.587 603.502 170.913 583.289 147.606C573.889 136.979 570.708 134.27 563.615 131.921ZM588.436 176.78C598.667 202.1 596.985 221.842 583.298 237.673C574.967 247.285 567.442 250.079 540.406 253.839C524.171 255.845 512.178 259.011 497.653 265.145L477.158 273.624L487.122 262.174C492.61 256.091 498.735 248.607 500.988 245.646C504.76 240.432 505.742 240.272 516.042 242.415C532.649 246.091 552.282 240.544 558.843 230.276C561.422 226.475 560.734 226.35 553.246 230.948C543.893 236.557 531.832 238.476 522.954 235.748C514.339 233.292 513.484 231.228 520.094 229.84C526.999 228.169 544.251 218.092 551.162 211.424C560.427 202.487 568.275 189.138 568.409 181.919C568.558 174.422 566.459 172.245 542.869 154.561C535.541 149.025 535.032 148.203 537.532 145.791C542.532 140.968 553.217 138.8 559.622 141.025C568.746 144.303 581.857 160.542 588.436 176.78ZM534.844 127.112C534.407 129.897 533.084 131.174 529.959 132.35C524.871 133.844 522.299 132.649 509.89 123.612C498.415 115.248 491.521 114.283 478.32 119.14L467.539 122.974L459.419 114.263C453.53 107.864 450.318 105.711 447.782 106.319C442.006 107.689 431.044 119.577 423.8 132.08C420.243 138.4 417.012 143.88 416.718 144.164C415.542 145.299 409.56 133.212 406.35 123.704C402.2 111.162 403.562 104.333 412.092 96.1049C417.68 90.714 419.807 89.9755 427.976 90.4979C433.101 90.8066 448.112 90.769 461.338 90.3526C487.643 89.6616 490.1 90.4427 510.473 103.615C527.634 114.635 535.67 122.376 534.844 127.112ZM528.165 144.322L524.195 148.153L534.656 157.231C544.986 166.174 544.986 166.174 541.457 169.578C539.398 171.564 537.78 173.125 537.649 172.989C537.649 172.989 536.579 169.82 535.541 166.094C534.172 160.849 531.448 157.437 524.43 151.34C517.265 145.384 515.853 143.332 517.964 142.871C519.518 142.422 521.073 141.973 521.645 141.684C524.686 139.538 529.889 138.457 530.808 139.41C531.464 140.09 530.224 142.336 528.165 144.322ZM556.095 188.284C555.042 194.551 553.687 196.383 542.443 205.918C528.699 217.863 511.527 226.551 499.923 227.766C487.337 229.14 430.016 215.633 430.122 211.329C430.38 209.242 462.923 208.836 482.292 210.372C507.325 212.483 520.416 209.572 530.857 199.499C534.975 195.527 539.939 188.9 541.977 184.833C544.52 179.229 546.154 177.39 548.952 177.054C554.549 176.381 557.357 180.763 556.095 188.284ZM500.591 140.46C492.231 143.272 488.487 145.572 484.6 150.372C478.018 158.559 475.184 157.092 471.885 144.255C470.532 138.732 469.442 133.481 469.473 132.926C469.505 132.37 473.528 130.065 478.663 127.737C485.942 124.392 489.297 124.044 495.964 126.541C500.322 128.115 505.713 131.055 507.813 133.231L511.355 136.904L500.591 140.46ZM530.541 170.918C532.979 179.332 530.516 183.547 522.35 185.384L516.296 186.76L517.26 177.164C518.498 165.203 513.575 158.923 503.772 160.239C495.082 161.531 493.023 163.517 499.491 164.631C510.102 166.212 512.477 175.738 501.966 174.848C491.177 173.965 485.62 161.73 492.826 154.779C503.855 144.139 525.695 153.533 530.541 170.918ZM522.977 196.334C517.344 195.203 517.455 193.258 523.036 192.863C526.522 192.652 528.013 193.314 527.246 194.579C526.611 195.98 524.631 196.577 522.977 196.334ZM460.718 142.685C461.829 150.017 463.942 159.271 465.258 162.99C469.125 173.178 486.64 190.158 499.912 196.263C506.007 199.05 510.857 201.723 510.826 202.279C510.83 204.638 493.167 204.87 475.762 203.015C465.414 201.706 450.435 201.188 441.923 201.783C428.109 202.767 426.88 202.376 426.43 198.083C425.467 190.61 427.627 181.96 431.856 176.043C433.978 172.945 437.204 165.106 438.697 158.413C440.469 151.714 442.177 146.127 442.734 146.116C443.29 146.104 444.691 150.793 446.044 156.316C448.801 168.887 460.453 183.908 472.317 190.32L480.134 194.597L470.518 182.864C458.966 168.535 452.77 155.342 451.566 142.322C450.901 136.924 450.189 132.359 449.795 131.951C449.401 131.543 445.756 134.534 441.492 138.648C435.609 144.322 433.44 148.254 430.854 157.051C426.822 171.707 423.498 171.5 425.173 156.754C426.41 144.793 433.619 130.486 442.295 122.116C447.001 117.577 447.279 117.571 452.79 123.284C457.121 127.772 458.946 132.314 460.718 142.685ZM506.457 186.273C505.599 191.564 504.502 191.31 493.29 183.218C482.093 174.849 480.844 172.377 490.545 177.725C494.33 179.588 499.113 181.014 501.208 180.832C506.102 180.313 507.152 181.401 506.457 186.273ZM482.462 170.817C481.249 170.148 479.674 168.516 479.181 167.416C478.704 166.038 479.654 166.435 481.491 168.339C483.328 170.244 483.69 171.207 482.462 170.817ZM401.304 139.075C410.96 154.971 416.403 176.506 416.774 199.258C417.018 224.232 422.919 245.064 436.273 269.209L446.852 288.416L442.147 292.955C433.176 301.609 414.484 302.834 398.918 295.528C379.027 286.092 364.258 267.251 358.5 243.918C352.858 221 358.381 172.867 370.599 141.385C373.857 132.99 374.298 132.564 375.499 135.87C376.223 137.797 379.083 143.705 381.843 148.92C392.553 168.263 393.901 171.427 395.331 182.916C397.139 195.09 398.892 196.025 401.541 186.116C403.865 177.046 399.895 163.807 389.682 147.923C379.994 132.583 373.777 117.31 376.277 114.898C379.66 111.635 391.78 123.315 401.304 139.075ZM539.245 288.835C540.042 294.37 540.112 305.332 539.112 313.124L537.485 327.036L522.949 318.737C502.628 307.09 498.517 306.066 468.332 306.561L441.208 306.992L450.325 298.196C457.237 291.528 462.273 288.508 471.631 285.259C478.452 282.617 489.395 278.363 495.954 275.45C502.366 272.679 512.379 270.109 518.092 269.85C531.056 269.162 536.599 274.319 539.245 288.835ZM488.319 246.05C482.819 254.77 466.642 270.375 458.597 274.985C453.576 277.727 452.61 277.609 448.984 272.966C443.027 265.32 429.726 235.346 429.387 229.108C429.131 223.839 429.41 223.834 450.195 229.781C461.692 232.87 475.563 235.771 481.097 236.21C486.5 236.513 491.33 237.105 492.002 237.508C492.527 238.052 490.782 241.835 488.319 246.05ZM352.883 174.231C344.951 203.68 345.847 244.045 354.883 261.064C357.018 265.044 358.335 268.763 357.747 269.331C356.423 270.607 346.555 263.321 339.338 255.839C329.759 245.91 328.019 234.983 332.483 215.182C337.141 194.407 335.155 182.93 324.108 167.063C316.934 156.389 312.737 144.681 315.054 140.608C316.766 137.38 329.771 140.854 340.538 147.012C356.827 156.246 357.451 157.482 352.883 174.231Z',
@@ -27,79 +39,481 @@ const listFood = [
   require('./assets/food_1.png'),
   require('./assets/food_2.png'),
   require('./assets/food_3.png'),
-  require('./assets/food_4.png'),
+  require('./assets/food_5.png'),
 ];
+const r = 300;
+
+const imageSize = 240;
+const heightCircle = 600;
+const widthCircle = 600;
 const Food_Material = () => {
+  const rotateFood = useSharedValue(0);
+  const translateXDrawer = useSharedValue(0);
+  const panHandler = useAnimatedGestureHandler({
+    onActive: (e, ctx) => {
+      ctx.currentTranslateX = 0;
+    },
+    onEnd: (e, ctx) => {
+      if (e.translationX - ctx.currentTranslateX < 0) {
+        if (rotateFood.value < 3) {
+          rotateFood.value = withTiming(rotateFood.value + 1);
+        } else {
+          rotateFood.value = withTiming(0);
+        }
+      } else {
+        if (rotateFood.value - 1 > -3) {
+          rotateFood.value = withTiming(rotateFood.value - 1);
+        } else {
+          rotateFood.value = withTiming(0);
+        }
+      }
+    },
+  });
+  const rotateAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          rotate: `${interpolate(
+            rotateFood.value,
+            [-3, -2, -1, 0, 1, 2, 3],
+            [-270, -180, -90, 0, 90, 180, 270],
+          )}deg`,
+        },
+      ],
+    };
+  });
+  const translateXAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {translateX: interpolate(translateXDrawer.value, [0, 1], [100, 0])},
+      ],
+    };
+  });
   return (
-    <View
+    <GestureHandlerRootView
       style={{
         flex: 1,
-        backgroundColor: 'white',
       }}>
-      <StatusBar backgroundColor={'hsl(0,30%,83%)'} />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+        }}>
+        <StatusBar backgroundColor={'hsl(0,30%,83%)'} />
 
-      <Svg width={width} height={400}>
-        <Defs>
-          <Mask id="Mask">
-            <Circle cx={width / 2} cy={10} r={300} />
-          </Mask>
-          <ClipPath id="ClipPath">
-            <Circle cx={width / 2} cy={10} r={400} />
-          </ClipPath>
-        </Defs>
-        <Circle cx={width / 2} cy={10} r={300} fill="hsl(0,30%,83%)"></Circle>
+        <Svg width={width} height={400}>
+          <Defs>
+            <Mask id="Mask">
+              <Circle cx={width / 2} cy={10} r={300} />
+            </Mask>
+          </Defs>
+          <Circle cx={width / 2} cy={10} r={r} fill="hsl(0,30%,83%)"></Circle>
 
-        <Path
-          d={roseFlowerLeft}
-          fill={'white'}
-          x={-50}
-          y={90}
-          strokeWidth={1}
-          scale={0.2}
-        />
-        <Path
-          d={roseFlowerRight}
-          fill={'white'}
-          x={width - 100}
-          y={80}
-          strokeWidth={1}
-          scale={0.2}
-        />
-        <G transform={'rotate(15)'}>
-          <Image
-            href={listFood[0]}
-            width={150}
-            height={150}
-            x={width / 2 - 75}
-            y={150 + 75}
-
-            //clipPath="url(#ClipPath)"
+          <Path
+            d={roseFlowerLeft}
+            fill={'white'}
+            x={-50}
+            y={90}
+            strokeWidth={1}
+            scale={0.2}
           />
-        </G>
-        {/* <Image
-          href={listFood[1]}
-          width={150}
-          height={150}
-          x={width - 75}
-          y={150 - 75}
-        />
-        <Image
-          href={listFood[2]}
-          width={150}
-          height={150}
-          x={width / 2}
-          y={-300}
-        />
-        <Image
-          href={listFood[3]}
-          width={150}
-          height={150}
-          x={-75}
-          y={150 - 75}
-        /> */}
-      </Svg>
-      <View></View>
-    </View>
+          <Path
+            d={roseFlowerRight}
+            fill={'white'}
+            x={width - 100}
+            y={80}
+            strokeWidth={1}
+            scale={0.2}
+          />
+        </Svg>
+        <PanGestureHandler onGestureEvent={panHandler}>
+          <Animated.View
+            style={[
+              {
+                position: 'absolute',
+                width: widthCircle,
+                height: heightCircle,
+                borderRadius: 600,
+                left: (width - widthCircle) / 2,
+                top: -heightCircle / 2,
+              },
+              rotateAnimatedStyle,
+            ]}>
+            <Image
+              source={listFood[0]}
+              style={{
+                width: imageSize,
+                height: imageSize,
+                resizeMode: 'contain',
+                position: 'absolute',
+                top: -imageSize / 2,
+                left: widthCircle / 2 - imageSize / 2,
+              }}
+            />
+            <Image
+              source={listFood[1]}
+              style={{
+                width: imageSize,
+                height: imageSize,
+                position: 'absolute',
+                top: heightCircle / 2 - imageSize / 2,
+                right: -imageSize / 2,
+              }}
+            />
+            <Image
+              source={listFood[2]}
+              style={{
+                width: imageSize,
+                height: imageSize,
+                resizeMode: 'contain',
+                position: 'absolute',
+                top: heightCircle - imageSize / 2,
+                left: widthCircle / 2 - imageSize / 2,
+              }}
+            />
+            <Image
+              source={listFood[3]}
+              style={{
+                width: imageSize,
+                height: imageSize,
+                resizeMode: 'contain',
+                position: 'absolute',
+                top: heightCircle / 2 - imageSize / 2,
+                left: -imageSize / 2,
+              }}
+            />
+          </Animated.View>
+        </PanGestureHandler>
+
+        <View
+          style={{
+            width: width,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 15,
+            position: 'absolute',
+            top: 15,
+          }}>
+          <Feather name="menu" size={22} color="hsl(0,0%,50%)" />
+          <Pressable
+            onPress={() => {
+              translateXDrawer.value = withTiming(1);
+            }}>
+            <Feather name="shopping-cart" size={22} color="hsl(0,0%,50%)" />
+          </Pressable>
+        </View>
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              zIndex: 99,
+              width: 100,
+              height: height,
+              right: 0,
+              paddingHorizontal: 15,
+              backgroundColor: 'hsl(0,18%,50%)',
+            },
+            translateXAnimatedStyle,
+          ]}>
+          <Pressable
+            onPress={() => (translateXDrawer.value = withTiming(0))}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'hsl(0,18%,70%)',
+              elevation: 4,
+              alignSelf: 'center',
+              marginTop: 30,
+              marginBottom: 15,
+            }}>
+            <Feather name="x" size={30} color="white" />
+          </Pressable>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 16,
+              color: 'white',
+              fontWeight: '700',
+            }}>
+            Your Order
+          </Text>
+          <Image
+            source={listFood[0]}
+            style={{
+              width: 100,
+              height: 100,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginVertical: 10,
+            }}
+          />
+          <Image
+            source={listFood[1]}
+            style={{
+              width: 100,
+              height: 100,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginVertical: 10,
+            }}
+          />
+          <Image
+            source={listFood[2]}
+            style={{
+              width: 100,
+              height: 100,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginVertical: 10,
+            }}
+          />
+          <Image
+            source={listFood[3]}
+            style={{
+              width: 100,
+              height: 100,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+              marginVertical: 10,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              color: 'white',
+              alignSelf: 'center',
+            }}>
+            Total
+          </Text>
+          <Text
+            style={{
+              fontSize: 16,
+              color: 'white',
+              alignSelf: 'center',
+              fontWeight: '700',
+            }}>
+            $42.80
+          </Text>
+          <Pressable
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              elevation: 4,
+              alignSelf: 'center',
+              marginTop: 30,
+              marginBottom: 15,
+            }}>
+            <Feather name="check" size={24} color="hsl(0,18%,70%)" />
+          </Pressable>
+        </Animated.View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 15,
+          }}>
+          <Pressable
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 100,
+              backgroundColor: 'hsl(0,30%,83%)',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Feather name="chevron-left" size={25} color="black" />
+          </Pressable>
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: '700',
+              color: 'black',
+            }}>
+            Tomato Pea Salad
+          </Text>
+          <Pressable
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 100,
+              backgroundColor: 'hsl(0,30%,83%)',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Feather name="chevron-right" size={25} color="black" />
+          </Pressable>
+        </View>
+
+        <View
+          style={{
+            width: '80%',
+            alignSelf: 'center',
+            marginTop: 30,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: 75,
+                justifyContent: 'space-between',
+                marginVertical: 10,
+              }}>
+              {[...new Array(5)].map((_, index) => (
+                <FontAwesome name="star" key={index} color="hsl(47,98%,50%)" />
+              ))}
+            </View>
+            <Text
+              style={{
+                fontSize: 12,
+                color: 'hsl(0,0%,73%)',
+                marginLeft: 10,
+              }}>
+              110 reviews
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 16,
+              color: 'hsl(0,0%,73%)',
+            }}>
+            Lorem ipsum dolor sit amet, consectetur adispising edit, Nuc
+            vulputate libero et velit interdium, ac aliquet odio mattis.
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginVertical: 20,
+            }}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: 'black',
+                fontWeight: '700',
+              }}>
+              $7.89
+            </Text>
+            <View
+              style={{
+                width: 100,
+                paddingVertical: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                backgroundColor: 'hsl(0,30%,83%)',
+              }}>
+              <Text
+                style={{
+                  color: 'hsl(0,0%,30%)',
+                  fontSize: 10,
+                }}>
+                400 grams
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingHorizontal: 5,
+                paddingVertical: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                backgroundColor: 'hsl(0,30%,83%)',
+              }}>
+              <Text
+                style={{
+                  color: 'hsl(0,0%,30%)',
+                  fontSize: 10,
+                }}>
+                600 grams
+              </Text>
+            </View>
+            <View
+              style={{
+                width: 100,
+                paddingVertical: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                backgroundColor: 'hsl(0,30%,83%)',
+              }}>
+              <Text
+                style={{
+                  color: 'hsl(0,0%,30%)',
+                  fontSize: 10,
+                }}>
+                800 grams
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <Pressable>
+              <View
+                style={{
+                  width: 150,
+                  height: 50,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 10,
+                  backgroundColor: 'black',
+                  borderRadius: 10,
+                }}>
+                <Feather name="shopping-cart" size={22} color="white" />
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 16,
+                  }}>
+                  Add to cart
+                </Text>
+              </View>
+            </Pressable>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'black',
+                borderRadius: 10,
+                width: 150,
+                height: 50,
+                justifyContent: 'space-between',
+                paddingHorizontal: 15,
+              }}>
+              <Feather name="plus" size={22} color="white" />
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 16,
+                }}>
+                16
+              </Text>
+              <Feather name="minus" size={22} color="white" />
+            </View>
+          </View>
+        </View>
+      </View>
+    </GestureHandlerRootView>
   );
 };
 
