@@ -17,8 +17,9 @@ import BoxUI from './src/RNSkia_Example/BoxUI';
 import ImageUI from './src/RNSkia_Example/ImageUI';
 import TextUI from './src/RNSkia_Example/TextUI';
 import TextPathUI from './src/RNSkia_Example/TextPathUI';
+import SpreadCard from './src/SpreadCard/SpreadCard';
 const App = () => {
-  return <TextPathUI />;
+  return <SpreadCard />;
 };
 
 export default App;
