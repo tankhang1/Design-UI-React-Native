@@ -13,6 +13,7 @@
     "@react-navigation/bottom-tabs": "^6.5.5",
     "@react-navigation/native": "^6.1.4",
     "@shopify/react-native-skia": "^0.1.173",
+    "lottie-react-native": "^5.1.5",
     "react": "18.1.0",
     "react-native": "0.70.6",
     "react-native-gesture-handler": "^2.9.0",

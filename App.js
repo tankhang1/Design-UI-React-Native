@@ -18,8 +18,9 @@ import ImageUI from './src/RNSkia_Example/ImageUI';
 import TextUI from './src/RNSkia_Example/TextUI';
 import TextPathUI from './src/RNSkia_Example/TextPathUI';
 import SpreadCard from './src/SpreadCard/SpreadCard';
+import Drag_Drop_V1 from './src/Drag&Drop/Drag_Drop_V1';
 const App = () => {
-  return <SpreadCard />;
+  return <Drag_Drop_V1 />;
 };
 
 export default App;
