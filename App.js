@@ -19,8 +19,19 @@ import TextUI from './src/RNSkia_Example/TextUI';
 import TextPathUI from './src/RNSkia_Example/TextPathUI';
 import SpreadCard from './src/SpreadCard/SpreadCard';
 import Drag_Drop_V1 from './src/Drag&Drop/Drag_Drop_V1';
+import Images from './src/RNSkia_Example/Images';
+import LinearGradientUI from './src/RNSkia_Example/LinearGradient';
+import RadialGradientUI from './src/RNSkia_Example/RadialGradientUI';
+import Two_Point_Conical_GradientUI from './src/RNSkia_Example/Two_Point_Conical_GradientUI';
+import SweepGradientUI from './src/RNSkia_Example/SweepGradientUI';
+import ShadowsUI from './src/RNSkia_Example/ShadowsUI';
+import BlurUI from './src/RNSkia_Example/BlurUI';
+import OffsetUI from './src/RNSkia_Example/OffsetUI';
+import MorphologyUI from './src/RNSkia_Example/MorphologyUI';
+import MaskFilterUI from './src/RNSkia_Example/MaskFilterUI';
+import MaskUI from './src/RNSkia_Example/MaskUI';
 const App = () => {
-  return <Drag_Drop_V1 />;
+  return <MaskUI />;
 };
 
 export default App;

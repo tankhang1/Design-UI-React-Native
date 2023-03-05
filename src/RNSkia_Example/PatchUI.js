@@ -6,7 +6,11 @@ const PatchUI = () => {
   const colors = ['#61dafb', '#fb61da', '#61fbcf', '#dafb61'];
   const C = 64;
   const width = 256;
-  const topLeft = {pos: vec(0, 0), c1: vec(0, C), c2: vec(C, 0)};
+  const topLeft = {
+    pos: vec(0, 0),
+    c1: vec(C * 0, C * 0.86),
+    c2: vec(C, C * 0.05),
+  };
   const topRight = {
     pos: vec(width, 0),
     c1: vec(width, C),
@@ -30,6 +34,7 @@ const PatchUI = () => {
       <Patch
         colors={colors}
         patch={[topLeft, topRight, bottomRight, bottomLeft]}
+        transform={[{translateX: 60}, {translateY: 100}]}
       />
     </Canvas>
   );
