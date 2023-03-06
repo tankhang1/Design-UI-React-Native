@@ -46,7 +46,7 @@ const PolygonsUI = () => {
       />
       <Points
         points={points}
-        mode="polygon"
+        mode="points"
         color="lightblue"
         style="stroke"
         strokeWidth={4}

@@ -17,6 +17,7 @@ import {
   rrect,
   rect,
 } from '@shopify/react-native-skia';
+import {G, Rect, Svg} from 'react-native-svg';
 
 //Khá giống vs G trong rn svg
 const {width, height} = Dimensions.get('screen');
@@ -51,7 +52,7 @@ const GroupUI = () => {
           Action
         </Text>
       </TouchableOpacity>
-      <Canvas style={{width: 300, height: 300, borderWidth: 1}}>
+      {/* <Canvas style={{width: 300, height: 300, borderWidth: 1}}>
         <Group color={'blue'} clip={clipRect} invertClip={true}>
           <RoundedRect
             x={86}
@@ -59,11 +60,11 @@ const GroupUI = () => {
             width={128}
             height={128}
             r={0}
-            origin={{x: 150, y: 150}}
+            //origin={{x: 150, y: 150}}
             transform={transform}
           />
         </Group>
-      </Canvas>
+      </Canvas> */}
     </View>
   );
 };

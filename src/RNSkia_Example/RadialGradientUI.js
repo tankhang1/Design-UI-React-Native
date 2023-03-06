@@ -13,9 +13,9 @@ const RadialGradientUI = () => {
       <Rect x={0} y={0} width={256} height={256}>
         <RadialGradient
           c={vec(128, 128)}
-          r={128}
+          r={60}
           colors={['blue', 'yellow']}
-          positions={[0.4, 0.6]}
+          // positions={[0.4, 0.6]}
         />
       </Rect>
     </Canvas>

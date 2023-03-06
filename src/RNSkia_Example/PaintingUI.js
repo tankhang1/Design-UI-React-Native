@@ -23,9 +23,9 @@ const PaintingUI = () => {
       }}>
       {/*Độ ưu tiên của thuộc tính bên trong Paint cao hơn thuộc tính của thẻ bọc nó bên ngoài (như là ghi đè) tức là nào khai báo sau sẽ đc lấy giá trị*/}
       <Circle c={c} r={r} color="hsl(198,86%,80%)">
-        <Paint color={'red'} blendMode="hue" opacity={0.5} />
+        <Paint color={'red'} />
         <Paint color={'blue'} style="stroke" strokeWidth={20} />
-        <Paint color={'green'} style="stroke" strokeWidth={10} />
+        <Paint color={'yellow'} style="stroke" strokeWidth={10} />
       </Circle>
 
       <Path

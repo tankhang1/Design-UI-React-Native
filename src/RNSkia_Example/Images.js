@@ -24,8 +24,8 @@ const Images = () => {
           image={image}
           fit="contain"
           rect={{x: 0, y: 0, width: 256, height: 256}}
-          tx="repeat"
-          ty="repeat"
+          tx="mirror"
+          ty="mirror"
         />
       </Fill>
       {/* </Circle> */}

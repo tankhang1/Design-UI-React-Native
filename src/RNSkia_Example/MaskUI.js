@@ -13,7 +13,7 @@ const MaskUI = () => {
             <Circle cx={128} cy={128} r={10} color="black" />
           </Group>
         }>
-        <Rect x={0} y={0} width={480} height={480} color="lightblue" />
+        <Rect x={0} y={0} width={480} height={480} color="green" />
       </Mask>
     </Canvas>
   );

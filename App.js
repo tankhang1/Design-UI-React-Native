@@ -30,8 +30,10 @@ import OffsetUI from './src/RNSkia_Example/OffsetUI';
 import MorphologyUI from './src/RNSkia_Example/MorphologyUI';
 import MaskFilterUI from './src/RNSkia_Example/MaskFilterUI';
 import MaskUI from './src/RNSkia_Example/MaskUI';
+import Process_Neumorphism from './src/Neumorphisim/Process/Process_Neumorphism';
+import Tesla_Neumorphism from './src/Neumorphisim/Tesla_Neumorphism/Tesla_Neumorphism';
 const App = () => {
-  return <MaskUI />;
+  return <Tesla_Neumorphism />;
 };
 
 export default App;

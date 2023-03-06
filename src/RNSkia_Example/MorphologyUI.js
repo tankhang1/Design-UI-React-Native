@@ -9,7 +9,7 @@ const MorphologyUI = () => {
     <Canvas style={{width: 400, height: 500, backgroundColor: 'white'}}>
       <Text text="Hello World" x={32} y={80} font={font} />
       <Text text="Hello World" x={32} y={150} font={font}>
-        <Morphology radius={0.5} operator="dilate" />
+        <Morphology radius={0.9} operator="erode" />
       </Text>
       <Text text="Hello World" x={32} y={200} font={font}>
         <Morphology radius={0.3} operator="erode" />

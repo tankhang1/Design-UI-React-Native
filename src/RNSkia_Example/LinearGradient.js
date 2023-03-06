@@ -14,11 +14,10 @@ const LinearGradientUI = () => {
     <Canvas style={{flex: 1}}>
       <Fill>
         <LinearGradient
-          start={vec(0, 0)}
+          start={vec(0, 200)}
           end={vec(400, 0)}
           colors={['blue', 'yellow']}
-          //   positions={[0.5, 0.9]}
-          flags={0}
+          positions={[0.2, 0.9]}
         />
       </Fill>
     </Canvas>

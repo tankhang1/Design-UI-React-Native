@@ -14,8 +14,8 @@ const SweepGradientUI = () => {
       <Rect x={0} y={0} width={256} height={256}>
         <SweepGradient
           c={vec(128, 128)}
-          start={150}
-          end={360}
+          start={90}
+          end={180}
           colors={['yellow', 'blue', 'red', 'green', 'cray']}
         />
       </Rect>
