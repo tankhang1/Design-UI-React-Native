@@ -8,11 +8,11 @@ import {
   Modal,
   ScrollView,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Message from './Message';
-import {DataMessage} from './DataMessage';
+import {DataMessage, RandomDataMessage} from './DataMessage';
 import Keyboard from './Keyboard';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Lottie from 'lottie-react-native';
@@ -33,9 +33,31 @@ import Animated, {
 const {width, height} = Dimensions.get('screen');
 
 const Drag_Drop_V1 = () => {
-  const locationButtonX = DataMessage.map(() => useSharedValue(0));
-  const locationButtonY = DataMessage.map(() => useSharedValue(0));
-  const buttonAnimatedStyle = DataMessage.map((_, index) =>
+  function shuffle(array) {
+    let currentIndex = array.length,
+      randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+
+    return array;
+  }
+  const [randomMessage, setRandomMessage] = useState(
+    shuffle(RandomDataMessage),
+  );
+  const locationButtonX = RandomDataMessage.map(() => useSharedValue(0));
+  const locationButtonY = RandomDataMessage.map(() => useSharedValue(0));
+  const buttonAnimatedStyle = RandomDataMessage.map((_, index) =>
     useAnimatedStyle(() => {
       return {
         transform: [
@@ -47,7 +69,7 @@ const Drag_Drop_V1 = () => {
   );
   const [layoutView_1, setLayoutView_1] = useState(null);
   const [layoutView_2, setLayoutView_2] = useState(null);
-  const listWidth = DataMessage.map(() => useSharedValue(0));
+  const listWidth = RandomDataMessage.map(() => useSharedValue(0));
   const listSentence = useSharedValue([]);
   const listTouch = useSharedValue([]);
   const numberRow = useSharedValue(0);
@@ -55,10 +77,17 @@ const Drag_Drop_V1 = () => {
 
   const [openModal, setOpenModal] = useState(false);
 
-  const onPress = () => {
-    // runOnJS(someWorklet)(listSentence.value);
+  const refreshPress = () => {
+    RandomDataMessage.map((_, index) => {
+      locationButtonX[index].value = withTiming(0);
+      locationButtonY[index].value = withTiming(0);
+    });
+    listSentence.value = [];
+    listTouch.value = [];
+    numberRow.value = 0;
+    sentences.current = [];
   };
-
+  const reSort = () => {};
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   return (
     <GestureHandlerRootView
@@ -69,7 +98,10 @@ const Drag_Drop_V1 = () => {
         visible={openModal}
         animationType="fade"
         transparent
-        onRequestClose={() => setOpenModal(!openModal)}>
+        onRequestClose={() => {
+          setOpenModal(!openModal);
+          refreshPress();
+        }}>
         <View
           style={{
             flex: 1,
@@ -86,7 +118,7 @@ const Drag_Drop_V1 = () => {
               alignItems: 'center',
             }}>
             {[...sentences.current.map(value => value.message)].join(' ') ===
-            DataMessage.join(' ') ? (
+            DataMessage ? (
               <Lottie
                 source={{
                   uri: 'https://assets7.lottiefiles.com/packages/lf20_xcz6wutt.json',
@@ -240,139 +272,169 @@ const Drag_Drop_V1 = () => {
               height: e.nativeEvent.layout.width,
             })
           }>
-          {DataMessage.map((message, index) => {
-            const tapHandler = useAnimatedGestureHandler({
-              onEnd: (e, ctx) => {
-                if (layoutView_1 && layoutView_2 && listWidth) {
-                  if (
-                    listSentence.value
-                      .map(item => item.message)
-                      .includes(message) &&
-                    listSentence.value.map(item => item.index).includes(index)
-                  ) {
-                    if (listSentence.value.length !== 1) {
-                      listTouch.value = listTouch.value.filter(
-                        value => value !== index,
+          {randomMessage.length !== 0 &&
+            randomMessage.map((message, index) => {
+              const tapHandler = useAnimatedGestureHandler({
+                onEnd: (e, ctx) => {
+                  if (layoutView_1 && layoutView_2 && listWidth) {
+                    let listIndex = listSentence.value.map(item => item.index);
+                    if (listIndex.includes(index)) {
+                      let elementRemove =
+                        listSentence.value[listIndex.indexOf(index)];
+                      if (listSentence.value.length !== 1) {
+                        listTouch.value = listTouch.value.filter(
+                          value => value !== index,
+                        );
+
+                        listSentence.value = listSentence.value.filter(
+                          value => {
+                            if (value.index !== index) {
+                              return value;
+                            }
+                          },
+                        );
+
+                        locationButtonX[index].value = withTiming(0);
+                        locationButtonY[index].value = withTiming(0);
+                      } else {
+                        listTouch.value = [];
+                        listSentence.value = [];
+                        numberRow.value = 0;
+                        locationButtonX[index].value = withTiming(0);
+                        locationButtonY[index].value = withTiming(0);
+                      }
+                      console.log(elementRemove);
+                      listSentence.value = listSentence.value.map(
+                        (tmpItem, tmpIndex) => {
+                          let obj = {...tmpItem};
+                          if (tmpItem.currIndex >= elementRemove.currIndex) {
+                            if (elementRemove.row === obj.row) {
+                              locationButtonX[tmpItem.index].value = withTiming(
+                                locationButtonX[tmpItem.index].value -
+                                  listWidth[elementRemove.index].value.width -
+                                  5,
+                              );
+                            }
+
+                            console.log('pre', obj);
+                            obj.currIndex -= 1;
+                            console.log('after', obj);
+                          }
+                          console.log('done', obj);
+                          return obj;
+                        },
+                      );
+                      console.log('finish', listSentence.value);
+                    } else {
+                      let sumWidth = listTouch.value.reduce(
+                        (acc, curr, index) => {
+                          if (index === 0)
+                            return acc + listWidth[curr].value.width;
+                          else return acc + listWidth[curr].value.width + 5;
+                        },
+                        0,
                       );
 
-                      listSentence.value = listSentence.value.filter(value => {
-                        if (value.index !== index) {
-                          return value;
-                        }
+                      let offsetY =
+                        layoutView_1.y -
+                        listWidth[index].value.y -
+                        layoutView_2.y +
+                        numberRow.value * 50;
+                      let offsetX =
+                        listTouch.value.length === 0
+                          ? layoutView_1.x
+                          : sumWidth - listWidth[index].value.x + 10;
+                      if (
+                        sumWidth + listWidth[index].value.width >
+                        width - 40
+                      ) {
+                        numberRow.value = numberRow.value + 1;
+                        offsetY = offsetY + 50;
+                        listTouch.value = [];
+
+                        offsetX = layoutView_1.x - listWidth[index].value.x + 5;
+                        locationButtonX[index].value = withTiming(offsetX);
+
+                        locationButtonY[index].value = withTiming(offsetY);
+                      } else {
+                        locationButtonX[index].value = withTiming(
+                          listTouch.value.length === 0
+                            ? -listWidth[index].value.x + 5
+                            : offsetX,
+                        );
+
+                        locationButtonY[index].value = withTiming(offsetY);
+                      }
+
+                      listTouch.value.push(index);
+                      listSentence.value.push({
+                        message,
+                        index,
+                        currIndex: listSentence.value.length,
+                        row: numberRow.value,
                       });
-
-                      locationButtonX[index].value = withTiming(0);
-                      locationButtonY[index].value = withTiming(0);
-                    } else {
-                      listTouch.value = [];
-                      listSentence.value = [];
-                      // sentences.pop();
-                      numberRow.value = 0;
-                      locationButtonX[index].value = withTiming(0);
-                      locationButtonY[index].value = withTiming(0);
                     }
-                  } else if (
-                    !listSentence.value.map(item => item.index).includes(index)
-                  ) {
-                    let sumWidth = listTouch.value.reduce(
-                      (acc, curr, index) => {
-                        if (index === 0)
-                          return acc + listWidth[curr].value.width;
-                        else return acc + listWidth[curr].value.width + 5;
-                      },
-                      0,
-                    );
-
-                    let offsetY =
-                      layoutView_1.y -
-                      listWidth[index].value.y -
-                      layoutView_2.y +
-                      numberRow.value * 50;
-
-                    let offsetX =
-                      listTouch.value.length === 0
-                        ? layoutView_1.x
-                        : sumWidth - listWidth[index].value.x + 10;
-                    if (sumWidth + listWidth[index].value.width > width - 40) {
-                      numberRow.value = numberRow.value + 1;
-                      offsetY = offsetY + 50;
-                      listTouch.value = [];
-
-                      offsetX = layoutView_1.x - listWidth[index].value.x + 5;
-                      locationButtonX[index].value = withTiming(offsetX);
-
-                      locationButtonY[index].value = withTiming(offsetY);
-                    } else {
-                      locationButtonX[index].value = withTiming(
-                        listTouch.value.length === 0 ? 0 : offsetX,
-                      );
-
-                      locationButtonY[index].value = withTiming(offsetY);
-                    }
-
-                    listTouch.value.push(index);
-                    listSentence.value.push({message, index});
-                    //sentences.push({message, index});
                   }
-                }
-              },
-            });
-            return (
-              <TapGestureHandler onGestureEvent={tapHandler} key={index}>
-                <AnimatedPressable
-                  onPress={() => {
-                    if (
-                      sentences.current.map(item => item.index).includes(index)
-                    ) {
-                      sentences.current = sentences.current.filter(
-                        value => value.index !== index,
-                      );
-                    } else {
-                      sentences.current.push({message, index});
-                    }
-                  }}
-                  onLayout={e => {
-                    listWidth[index].value = {
-                      width: e.nativeEvent.layout.width,
-                      height: e.nativeEvent.layout.height,
-                      x: e.nativeEvent.layout.x,
-                      y: e.nativeEvent.layout.y,
-                    };
-                  }}
-                  style={[
-                    {
-                      paddingHorizontal: 0.5,
-                      paddingVertical: 0.5,
-                      paddingBottom: 4,
-                      backgroundColor: 'hsl(0,0%,73%)',
-                      marginHorizontal: 5,
-                      marginVertical: 5,
-                      borderRadius: 10,
-                    },
-                    buttonAnimatedStyle[index],
-                    // postionAnimatedStyle[index],
-                  ]}>
-                  <View
-                    key={index}
-                    style={{
-                      paddingHorizontal: 20,
-                      paddingVertical: 8,
-                      backgroundColor: 'white',
-                      borderRadius: 10,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
+                },
+              });
+              return (
+                <TapGestureHandler onGestureEvent={tapHandler} key={index}>
+                  <AnimatedPressable
+                    onPress={() => {
+                      if (
+                        sentences.current
+                          .map(item => item.index)
+                          .includes(index)
+                      ) {
+                        sentences.current = sentences.current.filter(
+                          value => value.index !== index,
+                        );
+                      } else {
+                        sentences.current.push({message, index});
+                      }
+                    }}
+                    onLayout={e => {
+                      listWidth[index].value = {
+                        width: e.nativeEvent.layout.width,
+                        height: e.nativeEvent.layout.height,
+                        x: e.nativeEvent.layout.x,
+                        y: e.nativeEvent.layout.y,
+                      };
+                    }}
+                    style={[
+                      {
+                        paddingHorizontal: 0.5,
+                        paddingVertical: 0.5,
+                        paddingBottom: 4,
+                        backgroundColor: 'hsl(0,0%,73%)',
+                        marginHorizontal: 5,
+                        marginVertical: 5,
+                        borderRadius: 10,
+                      },
+                      buttonAnimatedStyle[index],
+                      // postionAnimatedStyle[index],
+                    ]}>
+                    <View
+                      key={index}
                       style={{
-                        color: 'black',
+                        paddingHorizontal: 20,
+                        paddingVertical: 8,
+                        backgroundColor: 'white',
+                        borderRadius: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                       }}>
-                      {message}
-                    </Text>
-                  </View>
-                </AnimatedPressable>
-              </TapGestureHandler>
-            );
-          })}
+                      <Text
+                        style={{
+                          color: 'black',
+                        }}>
+                        {message}
+                      </Text>
+                    </View>
+                  </AnimatedPressable>
+                </TapGestureHandler>
+              );
+            })}
         </View>
         {/*Bottom */}
         <View
@@ -392,7 +454,8 @@ const Drag_Drop_V1 = () => {
               height: 44.5,
               borderRadius: 10,
             }}>
-            <View
+            <Pressable
+              onPress={refreshPress}
               style={{
                 width: 50,
                 height: 40,
@@ -401,12 +464,8 @@ const Drag_Drop_V1 = () => {
                 borderRadius: 10,
                 backgroundColor: 'white',
               }}>
-              <FontAwesome
-                name="keyboard-o"
-                size={30}
-                color="hsl(198,86%,71%)"
-              />
-            </View>
+              <FontAwesome name="refresh" size={30} color="hsl(198,86%,71%)" />
+            </Pressable>
           </View>
           <View
             style={{
@@ -420,7 +479,7 @@ const Drag_Drop_V1 = () => {
             }}>
             <Pressable
               onPress={() => {
-                console.log(sentences.current), setOpenModal(!openModal);
+                setOpenModal(!openModal);
               }}
               style={{
                 width: '100%',

@@ -1,7 +1,7 @@
 import {View, Text, Dimensions} from 'react-native';
 import React from 'react';
 import {G, Path, Polygon, Svg} from 'react-native-svg';
-import {DataMessage} from './DataMessage';
+import {DataMessage, DataVNMessage} from './DataMessage';
 const {width, height} = Dimensions.get('screen');
 const Message = () => {
   return (
@@ -31,7 +31,7 @@ const Message = () => {
             lineHeight: 26,
             color: 'black',
           }}>
-          {DataMessage.join(' ')}
+          {DataVNMessage}
         </Text>
       </View>
     </Svg>
