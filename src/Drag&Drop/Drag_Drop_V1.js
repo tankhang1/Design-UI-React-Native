@@ -315,6 +315,11 @@ const Drag_Drop_V1 = () => {
                                   5,
                               );
                             }
+                            /*Still problem when we have more than 2 row , delete not exact */
+                            else
+                            {
+
+                            }
 
                             console.log('pre', obj);
                             obj.currIndex -= 1;
