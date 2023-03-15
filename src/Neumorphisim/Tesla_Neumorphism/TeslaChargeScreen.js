@@ -6,8 +6,9 @@ import {
   Image,
   ViewComponent,
   ScrollView,
+  Pressable,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
@@ -43,6 +44,7 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 const {width: WIDTH_SCREEN, height: HEIGHT_SCREEN} = Dimensions.get('screen');
 const TeslaChargeScreen = () => {
@@ -50,6 +52,29 @@ const TeslaChargeScreen = () => {
   const fontFamily_16 = useFont(require('./Font/Roboto-Regular.ttf'), 16);
   const progressCharge = useSharedValue(0);
   const percentageChage = useValue(0);
+  const rotateValue = useSharedValue(0);
+  const heightDropdown = useValue(100);
+  const dropdownAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {rotate: `${interpolate(rotateValue.value, [0, 1], [-90, 90])}deg`},
+      ],
+    };
+  });
+  const dropdownHeight = useAnimatedStyle(() => {
+    return {
+      height: interpolate(rotateValue.value, [0, 1], [100, 300]),
+    };
+  });
+  const dropdownPress = () => {
+    if (rotateValue.value === 1) {
+      rotateValue.value = withTiming(0);
+      heightDropdown.value = withTiming(100);
+    } else {
+      rotateValue.value = withTiming(1);
+      heightDropdown.value = withTiming(300);
+    }
+  };
   const chargeAnimatedStyle = useAnimatedStyle(() => {
     return {
       width: progressCharge.value,
@@ -81,6 +106,14 @@ const TeslaChargeScreen = () => {
     () => `${percentageChage.current.toFixed(0)}%`,
     [percentageChage],
   );
+  useSharedValueEffect(() => {
+    heightDropdown.current = rotateValue.value * 200 + 100;
+  }, rotateValue);
+  const updateHeight = useComputedValue(
+    () => rrect(rect(0, 0, 330, heightDropdown.current), 40, 40),
+    [heightDropdown],
+  );
+  const PressableAnimated = Animated.createAnimatedComponent(Pressable);
   return (
     <GestureHandlerRootView
       style={{
@@ -107,7 +140,6 @@ const TeslaChargeScreen = () => {
           style={{
             position: 'absolute',
             width: WIDTH_SCREEN,
-            flex: 1,
             height: HEIGHT_SCREEN,
           }}
           onScroll={e => console.log(e)}>
@@ -518,27 +550,48 @@ const TeslaChargeScreen = () => {
               alignItems: 'center',
               marginTop: 80,
             }}>
-            <Canvas
-              style={{
-                width: 330,
-                height: 300,
-              }}>
-              <RoundedRect x={0} y={0} width={330} height={300} r={40}>
-                <Paint color={'#202122'} />
-                <BoxShadow dx={-12} dy={-6} blur={2} color="black" inner />
-                <BoxShadow dx={12} dy={6} blur={2} color="#252627" inner />
-              </RoundedRect>
-            </Canvas>
+            <Animated.View
+              style={[
+                {
+                  height: 100,
+                },
+                dropdownHeight,
+              ]}>
+              <Canvas
+                style={{
+                  width: 330,
+                  height: 300,
+                  overflow: 'hidden',
+                }}>
+                <Box box={updateHeight} color="#202122">
+                  <BoxShadow
+                    dx={-3}
+                    dy={-3}
+                    blur={6}
+                    color="rgba(255,255,255,0.25)"
+                    inner
+                  />
+                  <BoxShadow
+                    dx={3}
+                    dy={3}
+                    blur={6}
+                    color="rgba(0,0,0,0.25)"
+                    inner
+                  />
+                </Box>
+              </Canvas>
+            </Animated.View>
             <ScrollView
-              style={{
-                position: 'absolute',
-                // justifyContent: 'flex-start',
-                // alignItems: 'flex-start',
-                height: 300,
-                paddingTop: 20,
-              }}
+              style={[
+                {
+                  position: 'absolute',
+                  top: 0,
+
+                  overflow: 'hidden',
+                },
+              ]}
               showsVerticalScrollIndicator={false}>
-              <View
+              <Animated.View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -553,7 +606,11 @@ const TeslaChargeScreen = () => {
                   }}>
                   Nearby Superchargers
                 </Text>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
                   <Canvas style={{width: 100, height: 100}}>
                     <Circle c={vec(50, 50)} r={31}>
                       <RadialGradient
@@ -589,11 +646,15 @@ const TeslaChargeScreen = () => {
                       />
                     </Circle>
                   </Canvas>
-                  <View
-                    style={{
-                      position: 'absolute',
-                      transform: [{rotate: '90deg'}],
-                    }}>
+                  <PressableAnimated
+                    style={[
+                      {
+                        position: 'absolute',
+                      },
+                      dropdownAnimatedStyle,
+                    ]}
+                    hitSlop={10}
+                    onPress={dropdownPress}>
                     <Canvas style={{width: 15, height: 15}}>
                       <Path
                         path={
@@ -602,9 +663,9 @@ const TeslaChargeScreen = () => {
                         color="rgba(235,235,245,0.6)"
                       />
                     </Canvas>
-                  </View>
+                  </PressableAnimated>
                 </View>
-              </View>
+              </Animated.View>
               <View
                 style={{
                   flexDirection: 'row',
@@ -785,209 +846,197 @@ const TeslaChargeScreen = () => {
                 </Canvas>
               </View>
             </ScrollView>
+          </View>
+        </ScrollView>
+        <View
+          style={{
+            width: WIDTH_SCREEN,
+            position: 'absolute',
+            bottom: 0,
+
+            left: 1,
+          }}>
+          <Canvas
+            style={{
+              width: WIDTH_SCREEN,
+              height: 78,
+            }}>
+            <Path
+              path={
+                'M0 30L16.3492 12.94C24.2708 4.67391 35.2237 0 46.6727 0H124.328C132.903 0 141.273 2.62492 148.313 7.52198L169.302 22.1232C184.749 32.8689 205.251 32.8689 220.698 22.1232L241.687 7.52198C248.727 2.62491 257.097 0 265.672 0H343.327C354.776 0 365.729 4.67391 373.651 12.94L390 30V78H0V30Z'
+              }
+              color="#000000"
+              opacity={0.9}>
+              <BoxShadow
+                dx={-2}
+                dy={-4}
+                blur={21}
+                color="rgba(255,255,255,0)"
+                inner
+              />
+              <BlurMask blur={6} style="inner" />
+              <BoxShadow
+                dx={0}
+                dy={1}
+                blur={3}
+                color="rgba(255,255,255,0.22)"
+                inner
+              />
+            </Path>
+            <Path
+              path={
+                'M0 30L16.3492 12.94C24.2708 4.67391 35.2237 0 46.6727 0H124.328C132.903 0 141.273 2.62492 148.313 7.52198L169.302 22.1232C184.749 32.8689 205.251 32.8689 220.698 22.1232L241.687 7.52198C248.727 2.62491 257.097 0 265.672 0H343.327C354.776 0 365.729 4.67391 373.651 12.94L390 30V78H0V30Z'
+              }
+              color="white"
+              opacity={0.2}
+              strokeWidth={2}
+              style={'stroke'}
+            />
+          </Canvas>
+
+          <View
+            style={{
+              position: 'absolute',
+              top: -50,
+              alignSelf: 'center',
+            }}>
+            <Canvas
+              style={{
+                width: 68,
+                height: 68,
+              }}>
+              <Circle c={vec(68 / 2, 68 / 2)} r={68 / 2 - 1} opacity={0.6}>
+                <BlurMask blur={6} style="inner" />
+              </Circle>
+              <Circle c={vec(68 / 2, 68 / 2)} r={68 / 2} style="stroke">
+                <LinearGradient
+                  start={vec(68 / 2, 0)}
+                  end={vec(68 / 2, 68)}
+                  colors={['rgba(255,255,255,0.6)', 'rgba(0,0,0,0)']}
+                />
+              </Circle>
+              <Group transform={[{translateX: 18}, {translateY: 37 / 2}]}>
+                <Path
+                  path={
+                    'M0.628906 15.3087C0.628906 16.5568 1.66602 17.5763 2.89648 17.5763H13.2324V27.9122C13.2324 29.1603 14.252 30.1798 15.5 30.1798C16.748 30.1798 17.7676 29.1603 17.7676 27.9122V17.5763H28.1035C29.3516 17.5763 30.3711 16.5568 30.3711 15.3087C30.3711 14.0607 29.3516 13.0411 28.1035 13.0411H17.7676V2.7052C17.7676 1.47473 16.748 0.437622 15.5 0.437622C14.252 0.437622 13.2324 1.47473 13.2324 2.7052V13.0411H2.89648C1.66602 13.0411 0.628906 14.0607 0.628906 15.3087Z'
+                  }>
+                  <LinearGradient
+                    start={vec(15.5, -5.99988)}
+                    end={vec(15.5, 37)}
+                    colors={['#2FB8FF', '#9EECD9']}
+                  />
+                </Path>
+              </Group>
+            </Canvas>
+          </View>
+          <View
+            style={{
+              width: WIDTH_SCREEN,
+              position: 'absolute',
+              top: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+            }}>
+            <Canvas
+              style={{
+                width: 44,
+                height: 44,
+              }}>
+              <Path
+                path={
+                  'M7 5H17L22 11.5V19H19L18 17H6L5 19H2V11.5L7 5Z M17 15H7L6 17H18L17 15Z M2 9H4L6 12H18L20 9H22'
+                }
+                style="stroke"
+                color={'#EBEBF5'}
+                opacity={0.6}
+                strokeWidth={2}
+                strokeCap="round"
+                strokeJoin={'round'}
+                transform={[{translateX: 10}, {translateY: 10}]}
+              />
+            </Canvas>
 
             <View
               style={{
-                width: WIDTH_SCREEN,
-                position: 'absolute',
-                bottom: -10,
-                left: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '55%',
               }}>
               <Canvas
                 style={{
-                  width: WIDTH_SCREEN,
-                  height: 78,
+                  width: 44,
+                  height: 44,
                 }}>
                 <Path
                   path={
-                    'M0 30L16.3492 12.94C24.2708 4.67391 35.2237 0 46.6727 0H124.328C132.903 0 141.273 2.62492 148.313 7.52198L169.302 22.1232C184.749 32.8689 205.251 32.8689 220.698 22.1232L241.687 7.52198C248.727 2.62491 257.097 0 265.672 0H343.327C354.776 0 365.729 4.67391 373.651 12.94L390 30V78H0V30Z'
+                    'M15.2051 23.1309C15.2051 23.5508 15.5371 23.8633 15.9863 23.8633H21.7578L18.7305 31.9395C18.3105 33.043 19.4629 33.6289 20.1953 32.7305L29.502 21.3047C29.6875 21.0703 29.7852 20.8555 29.7852 20.6211C29.7852 20.1914 29.4531 19.8789 29.0039 19.8789H23.2324L26.2598 11.8125C26.6797 10.6992 25.5273 10.1133 24.7949 11.0117L15.4883 22.4473C15.3027 22.6719 15.2051 22.8867 15.2051 23.1309Z'
                   }
-                  color="#000000"
-                  opacity={0.9}>
-                  <BoxShadow
-                    dx={-2}
-                    dy={-4}
-                    blur={21}
-                    color="rgba(255,255,255,0)"
-                    inner
-                  />
-                  <BlurMask blur={6} style="inner" />
-                  <BoxShadow
-                    dx={0}
-                    dy={1}
-                    blur={3}
-                    color="rgba(255,255,255,0.22)"
-                    inner
+                  //style="stroke"
+                  color={'#EBEBF5'}
+                  opacity={0.6}
+                  strokeWidth={2}
+                  strokeCap="round"
+                  strokeJoin={'round'}>
+                  <LinearGradient
+                    start={vec(44 / 2, 12)}
+                    end={vec(44 / 2, 28)}
+                    colors={['#2FB8FF', '#9EECD9']}
                   />
                 </Path>
-                <Path
-                  path={
-                    'M0 30L16.3492 12.94C24.2708 4.67391 35.2237 0 46.6727 0H124.328C132.903 0 141.273 2.62492 148.313 7.52198L169.302 22.1232C184.749 32.8689 205.251 32.8689 220.698 22.1232L241.687 7.52198C248.727 2.62491 257.097 0 265.672 0H343.327C354.776 0 365.729 4.67391 373.651 12.94L390 30V78H0V30Z'
-                  }
-                  color="white"
-                  opacity={0.2}
-                  strokeWidth={2}
-                  style={'stroke'}
-                />
+                <RoundedRect x={11} y={11} width={22} height={22} r={100}>
+                  <RadialGradient
+                    c={vec(11, 11)}
+                    r={22}
+                    colors={['#2FB8FF', '#9EECD9']}
+                  />
+                  <Blur blur={8} />
+                </RoundedRect>
               </Canvas>
 
-              <View
+              <Canvas
                 style={{
-                  position: 'absolute',
-                  top: -50,
-                  alignSelf: 'center',
+                  width: 44,
+                  height: 44,
                 }}>
-                <Canvas
-                  style={{
-                    width: 68,
-                    height: 68,
-                  }}>
-                  <Circle c={vec(68 / 2, 68 / 2)} r={68 / 2 - 1} opacity={0.6}>
-                    <BlurMask blur={6} style="inner" />
-                  </Circle>
-                  <Circle c={vec(68 / 2, 68 / 2)} r={68 / 2} style="stroke">
-                    <LinearGradient
-                      start={vec(68 / 2, 0)}
-                      end={vec(68 / 2, 68)}
-                      colors={['rgba(255,255,255,0.6)', 'rgba(0,0,0,0)']}
-                    />
-                  </Circle>
-                  <Group transform={[{translateX: 18}, {translateY: 37 / 2}]}>
-                    <Path
-                      path={
-                        'M0.628906 15.3087C0.628906 16.5568 1.66602 17.5763 2.89648 17.5763H13.2324V27.9122C13.2324 29.1603 14.252 30.1798 15.5 30.1798C16.748 30.1798 17.7676 29.1603 17.7676 27.9122V17.5763H28.1035C29.3516 17.5763 30.3711 16.5568 30.3711 15.3087C30.3711 14.0607 29.3516 13.0411 28.1035 13.0411H17.7676V2.7052C17.7676 1.47473 16.748 0.437622 15.5 0.437622C14.252 0.437622 13.2324 1.47473 13.2324 2.7052V13.0411H2.89648C1.66602 13.0411 0.628906 14.0607 0.628906 15.3087Z'
-                      }>
-                      <LinearGradient
-                        start={vec(15.5, -5.99988)}
-                        end={vec(15.5, 37)}
-                        colors={['#2FB8FF', '#9EECD9']}
-                      />
-                    </Path>
-                  </Group>
-                </Canvas>
-              </View>
-              <View
-                style={{
-                  width: WIDTH_SCREEN,
-                  position: 'absolute',
-                  top: 10,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
-                }}>
-                <Canvas
-                  style={{
-                    width: 44,
-                    height: 44,
-                  }}>
-                  <Path
-                    path={
-                      'M7 5H17L22 11.5V19H19L18 17H6L5 19H2V11.5L7 5Z M17 15H7L6 17H18L17 15Z M2 9H4L6 12H18L20 9H22'
-                    }
-                    style="stroke"
-                    color={'#EBEBF5'}
-                    opacity={0.6}
-                    strokeWidth={2}
-                    strokeCap="round"
-                    strokeJoin={'round'}
-                    transform={[{translateX: 10}, {translateY: 10}]}
-                  />
-                </Canvas>
-
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '55%',
-                  }}>
-                  <Canvas
-                    style={{
-                      width: 44,
-                      height: 44,
-                    }}>
-                    <Path
-                      path={
-                        'M15.2051 23.1309C15.2051 23.5508 15.5371 23.8633 15.9863 23.8633H21.7578L18.7305 31.9395C18.3105 33.043 19.4629 33.6289 20.1953 32.7305L29.502 21.3047C29.6875 21.0703 29.7852 20.8555 29.7852 20.6211C29.7852 20.1914 29.4531 19.8789 29.0039 19.8789H23.2324L26.2598 11.8125C26.6797 10.6992 25.5273 10.1133 24.7949 11.0117L15.4883 22.4473C15.3027 22.6719 15.2051 22.8867 15.2051 23.1309Z'
-                      }
-                      //style="stroke"
-                      color={'#EBEBF5'}
-                      opacity={0.6}
-                      strokeWidth={2}
-                      strokeCap="round"
-                      strokeJoin={'round'}>
-                      <LinearGradient
-                        start={vec(44 / 2, 12)}
-                        end={vec(44 / 2, 28)}
-                        colors={['#2FB8FF', '#9EECD9']}
-                      />
-                    </Path>
-                    <RoundedRect x={11} y={11} width={22} height={22} r={100}>
-                      <RadialGradient
-                        c={vec(11, 11)}
-                        r={22}
-                        colors={['#2FB8FF', '#9EECD9']}
-                      />
-                      <Blur blur={8} />
-                    </RoundedRect>
-                  </Canvas>
-
-                  <Canvas
-                    style={{
-                      width: 44,
-                      height: 44,
-                    }}>
-                    <Path
-                      path={
-                        'M6.96094 4.49902C6.96094 6.38965 8.23926 7.96875 9.99023 8.40918V15.209C9.99023 18.3779 10.5596 20.1074 10.9893 20.1074C11.4297 20.1074 11.9883 18.3887 11.9883 15.209V8.40918C13.7393 7.97949 15.0283 6.38965 15.0283 4.49902C15.0283 2.27539 13.2344 0.449219 10.9893 0.449219C8.75488 0.449219 6.96094 2.27539 6.96094 4.49902ZM9.83984 4.72461C9.10938 4.72461 8.46484 4.08008 8.46484 3.32812C8.46484 2.58691 9.10938 1.95312 9.83984 1.95312C10.6025 1.95312 11.2256 2.58691 11.2256 3.32812C11.2256 4.08008 10.6025 4.72461 9.83984 4.72461ZM11 24.0391C17.4775 24.0391 21.1943 21.8047 21.1943 19.4414C21.1943 16.6055 16.6934 14.876 13.7393 14.8438V16.4121C15.8125 16.4443 19.0244 17.5723 19.0244 19.1836C19.0244 21.0312 15.6191 22.3418 11 22.3418C6.35938 22.3418 2.97559 21.0527 2.97559 19.1836C2.97559 17.5723 6.17676 16.4443 8.25 16.4121V14.8438C5.2959 14.876 0.794922 16.6055 0.794922 19.4414C0.794922 21.8047 4.52246 24.0391 11 24.0391Z'
-                      }
-                      style="stroke"
-                      color={'#EBEBF5'}
-                      opacity={0.6}
-                      strokeWidth={2}
-                      strokeCap="round"
-                      strokeJoin={'round'}
-                      transform={[{translateX: 10}, {translateY: 10}]}
-                    />
-                  </Canvas>
-                </View>
-
-                <Canvas
-                  style={{
-                    width: 44,
-                    height: 44,
-                  }}>
-                  <Path
-                    path={
-                      'M22 22.1367C24.2988 22.1367 26.2969 20.0742 26.2969 17.3887C26.2969 14.7354 24.2988 12.7695 22 12.7695C19.7012 12.7695 17.7031 14.7783 17.7031 17.4102C17.7031 20.0742 19.6904 22.1367 22 22.1367ZM14.792 32.084H29.1973C30.3467 32.084 31.0342 31.5469 31.0342 30.6553C31.0342 27.8838 27.5645 24.0596 21.9893 24.0596C16.4248 24.0596 12.9551 27.8838 12.9551 30.6553C12.9551 31.5469 13.6426 32.084 14.792 32.084Z'
-                    }
-                    style="stroke"
-                    color={'#EBEBF5'}
-                    opacity={0.6}
-                    strokeWidth={2}
-                    strokeCap="round"
-                    strokeJoin={'round'}
-                  />
-                </Canvas>
-              </View>
+                <Path
+                  path={
+                    'M6.96094 4.49902C6.96094 6.38965 8.23926 7.96875 9.99023 8.40918V15.209C9.99023 18.3779 10.5596 20.1074 10.9893 20.1074C11.4297 20.1074 11.9883 18.3887 11.9883 15.209V8.40918C13.7393 7.97949 15.0283 6.38965 15.0283 4.49902C15.0283 2.27539 13.2344 0.449219 10.9893 0.449219C8.75488 0.449219 6.96094 2.27539 6.96094 4.49902ZM9.83984 4.72461C9.10938 4.72461 8.46484 4.08008 8.46484 3.32812C8.46484 2.58691 9.10938 1.95312 9.83984 1.95312C10.6025 1.95312 11.2256 2.58691 11.2256 3.32812C11.2256 4.08008 10.6025 4.72461 9.83984 4.72461ZM11 24.0391C17.4775 24.0391 21.1943 21.8047 21.1943 19.4414C21.1943 16.6055 16.6934 14.876 13.7393 14.8438V16.4121C15.8125 16.4443 19.0244 17.5723 19.0244 19.1836C19.0244 21.0312 15.6191 22.3418 11 22.3418C6.35938 22.3418 2.97559 21.0527 2.97559 19.1836C2.97559 17.5723 6.17676 16.4443 8.25 16.4121V14.8438C5.2959 14.876 0.794922 16.6055 0.794922 19.4414C0.794922 21.8047 4.52246 24.0391 11 24.0391Z'
+                  }
+                  style="stroke"
+                  color={'#EBEBF5'}
+                  opacity={0.6}
+                  strokeWidth={2}
+                  strokeCap="round"
+                  strokeJoin={'round'}
+                  transform={[{translateX: 10}, {translateY: 10}]}
+                />
+              </Canvas>
             </View>
+
+            <Canvas
+              style={{
+                width: 44,
+                height: 44,
+              }}>
+              <Path
+                path={
+                  'M22 22.1367C24.2988 22.1367 26.2969 20.0742 26.2969 17.3887C26.2969 14.7354 24.2988 12.7695 22 12.7695C19.7012 12.7695 17.7031 14.7783 17.7031 17.4102C17.7031 20.0742 19.6904 22.1367 22 22.1367ZM14.792 32.084H29.1973C30.3467 32.084 31.0342 31.5469 31.0342 30.6553C31.0342 27.8838 27.5645 24.0596 21.9893 24.0596C16.4248 24.0596 12.9551 27.8838 12.9551 30.6553C12.9551 31.5469 13.6426 32.084 14.792 32.084Z'
+                }
+                style="stroke"
+                color={'#EBEBF5'}
+                opacity={0.6}
+                strokeWidth={2}
+                strokeCap="round"
+                strokeJoin={'round'}
+              />
+            </Canvas>
           </View>
-        </ScrollView>
+        </View>
       </View>
     </GestureHandlerRootView>
   );
 };
 
 export default TeslaChargeScreen;
-<svg
-  width="44"
-  height="44"
-  viewBox="0 0 44 44"
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg">
-  <path
-    d="M22 22.1367C24.2988 22.1367 26.2969 20.0742 26.2969 17.3887C26.2969 14.7354 24.2988 12.7695 22 12.7695C19.7012 12.7695 17.7031 14.7783 17.7031 17.4102C17.7031 20.0742 19.6904 22.1367 22 22.1367ZM14.792 32.084H29.1973C30.3467 32.084 31.0342 31.5469 31.0342 30.6553C31.0342 27.8838 27.5645 24.0596 21.9893 24.0596C16.4248 24.0596 12.9551 27.8838 12.9551 30.6553C12.9551 31.5469 13.6426 32.084 14.792 32.084Z"
-    fill="#EBEBF5"
-    fill-opacity="0.6"
-  />
-</svg>;
