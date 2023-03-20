@@ -35,8 +35,31 @@ import React from 'react';
 // import ButtonUI from './src/RN_Component_Example/ButtonUI';
 import TeslaChargeScreen from './src/Neumorphisim/Tesla_Neumorphism/TeslaChargeScreen';
 import ImageUI from './src/RN_Component_Example/ImageUI';
+import Example_1 from './src/Rive/Example_1';
+import Rive, {Alignment, Fit, RiveRef} from 'rive-react-native';
+import PieCharComponent from './src/PieChart/PieChart';
+
 const App = () => {
-  return <TeslaChargeScreen />;
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'white',
+      }}>
+      {/* <Rive
+        resourceName={'login_screen_character'}
+        artboardName="Artboard"
+        stateMachineName="State Machine 1"
+        autoplay={true}
+        style={{width: '100%', height: 200}}
+        fit={Fit.Contain}
+      />
+      <View>
+        <Text style={{color: 'black'}}>Run time</Text>
+      </View> */}
+      <PieCharComponent outRadius={80} inRadius={45} width={250} height={250} />
+    </View>
+  );
 };
 
 export default App;
