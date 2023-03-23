@@ -36,9 +36,12 @@ const DATA_OUTCOME = [
 const PieCharComponent = ({
   outRadius,
   inRadius,
-
+  radius,
   width,
   height,
+  fontSize,
+  fontWeight,
+  color,
 }) => {
   const circumference = 2 * Math.PI * (inRadius + outRadius / 2);
   const caclAngle = currIndex => {
@@ -102,10 +105,18 @@ const PieCharComponent = ({
               style={{
                 width: 15,
                 height: 15,
+                borderRadius: radius,
                 backgroundColor: data.color,
               }}
             />
-            <Text style={{color: 'black', textAlign: 'left', width: 65}}>
+            <Text
+              style={{
+                color: color,
+                textAlign: 'left',
+                width: 65,
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+              }}>
               {data.title}
             </Text>
           </View>
