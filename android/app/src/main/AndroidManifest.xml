@@ -2,7 +2,7 @@
   package="com.awesomeproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"

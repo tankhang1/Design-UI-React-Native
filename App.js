@@ -6,6 +6,7 @@ import Drag_Drop_V1 from './src/Drag&Drop/Drag_Drop_V1';
 import Reflectly_Tabbar from './src/Reflectly_Tabbar/Reflectly_Tabbar';
 import SpreadCard from './src/SpreadCard/SpreadCard';
 import Copilot from './src/Copilot/Copilot';
+import Scanner from './src/Scanner/Scanner';
 const App = () => {
   return (
     <View

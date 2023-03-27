@@ -17,8 +17,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {transform} from '@babel/core';
-const {width, height} = Dimensions.get('screen');
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+const {width, height: HEIGHT_SCREEN} = Dimensions.get('window');
 const Copilot = () => {
   const onPress = () => {
     setOpenModal(!openModal);
@@ -27,10 +27,12 @@ const Copilot = () => {
   const [openModal, setOpenModal] = useState(false);
   const [listLayout, setListLayout] = useState([]);
   const [currentState, setCurrentState] = useState(0);
+  const [layoutBottom, setLayoutBottom] = useState(0);
   const frameWidth = useSharedValue(0);
   const frameHeight = useSharedValue(0);
   const frameX = useSharedValue(0);
   const frameY = useSharedValue(0);
+
   const onNext = () => {
     if (currentState < listLayout.length - 1) {
       let increase = currentState + 1;
@@ -53,16 +55,14 @@ const Copilot = () => {
   };
   const AnimatedRect = Animated.createAnimatedComponent(Rect);
   const AnimatedClip = Animated.createAnimatedComponent(ClipPath);
-  const AnimatedDefs = Animated.createAnimatedComponent(Defs);
-  const animatedRectProps = useAnimatedProps(() => {
-    return {
-      // transform: [{translateX: frameX.value}, {translateY: frameY.value}],
-      x: frameX.value,
-      y: frameY.value,
-      width: frameWidth.value,
-      height: frameHeight.value,
-    };
-  });
+  const onSkip = () => {
+    setCurrentState(listLayout.length - 1);
+
+    frameHeight.value = listLayout[listLayout.length - 1].height;
+    frameWidth.value = listLayout[listLayout.length - 1].width;
+    frameX.value = listLayout[listLayout.length - 1].x;
+    frameY.value = listLayout[listLayout.length - 1].y;
+  };
   return (
     <View
       style={{
@@ -86,86 +86,175 @@ const Copilot = () => {
                   <AnimatedRect
                     x={frameX.value - 10}
                     y={frameY.value - 5}
-                    // x={listLayout[0].x - 10}
-                    // y={listLayout[0].y - 5}
                     width={frameWidth.value + 20}
                     height={frameHeight.value + 10}
-                    // animatedProps={animatedRectProps}
                   />
-                  {/* <Path
-                      d={`M ${frameX.value - 10} ${frameY.value - 5} h ${
-                        frameWidth.value + 20
-                      } v${frameHeight.value + 10} h${
-                        -frameWidth.value - 20
-                      } z`}
-                    /> */}
-                  <Rect x={0} y={0} width={width} height={height} />
+                  <Rect x={0} y={0} width={width} height={HEIGHT_SCREEN} />
                 </AnimatedClip>
 
                 <Rect
                   width={width}
-                  height={height}
+                  height={HEIGHT_SCREEN}
                   fill={'rgba(0,0,0,0.2)'}
                   clipPath={'url(#rectPath)'}
                   fillRule="evenodd"
                 />
-
-                <Path
-                  d={`M ${listLayout[currentState].x} ${
-                    listLayout[currentState].y +
-                    listLayout[currentState].height +
-                    20
-                  } l 10 -6 l 10 6 z`}
-                  fill={'white'}
-                />
+                {listLayout[currentState].y > HEIGHT_SCREEN - 200 ? (
+                  <Path
+                    d={`M ${listLayout[currentState].x} ${
+                      listLayout[currentState].y - 20
+                    } l 5 12 l 5 -12 z`}
+                    fill={'white'}
+                  />
+                ) : (
+                  <Path
+                    d={`M ${listLayout[currentState].x} ${
+                      listLayout[currentState].y -
+                      20 +
+                      listLayout[currentState].height +
+                      40
+                    } l 5 -12 l 5 12 z`}
+                    fill={'white'}
+                  />
+                )}
               </Svg>
-
-              <View
-                style={{
-                  borderRadius: 5,
-                  paddingHorizontal: 10,
-                  paddingVertical: 10,
-                  width: listLayout[currentState].width,
-                  backgroundColor: 'white',
-                  top:
-                    listLayout[currentState].y +
-                    listLayout[currentState].height +
-                    20,
-                  left: listLayout[currentState].x - 10,
-                  position: 'absolute',
-                }}>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 18,
-                  }}>
-                  Hey! This is the first step
-                </Text>
+              {listLayout[currentState].y < HEIGHT_SCREEN - 200 ? (
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'flex-end',
-                    marginVertical: 10,
+                    borderRadius: 5,
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                    width: listLayout[currentState].width,
+                    height: 150,
+                    backgroundColor: 'white',
+                    top:
+                      listLayout[currentState].y +
+                      listLayout[currentState].height +
+                      20,
+
+                    left: listLayout[currentState].x - 10,
+                    position: 'absolute',
+                    minWidth: 150,
+                    transform: [
+                      {
+                        translateX:
+                          listLayout[currentState].width < 150 &&
+                          listLayout[currentState].x > width - 150
+                            ? -120
+                            : listLayout[currentState].x - 150 < 0
+                            ? 0
+                            : -listLayout[currentState].width,
+                      },
+                    ],
                   }}>
-                  <Pressable
+                  <Text
+                    adjustsFontSizeToFit
                     style={{
-                      width: 60,
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      color: 'black',
+                      fontSize: 18,
                     }}>
-                    <Text style={{color: 'green'}}>Skip</Text>
-                  </Pressable>
-                  <Pressable
-                    onPress={onNext}
+                    Hey! This is the first step
+                  </Text>
+                  <View
                     style={{
-                      width: 60,
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      flexDirection: 'row',
+                      justifyContent: 'flex-end',
+                      height: 50,
+
+                      position: 'absolute',
+                      bottom: 0,
+                      right: 0,
+                      zIndex: 999,
                     }}>
-                    <Text style={{color: 'green'}}>Next</Text>
-                  </Pressable>
+                    <Pressable
+                      onPress={onSkip}
+                      style={{
+                        width: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={{color: 'green'}}>Skip</Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={onNext}
+                      style={{
+                        width: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={{color: 'green'}}>Next</Text>
+                    </Pressable>
+                  </View>
                 </View>
-              </View>
+              ) : (
+                <View
+                  style={{
+                    borderRadius: 5,
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                    width: listLayout[currentState].width,
+                    height: 150,
+                    backgroundColor: 'white',
+                    top:
+                      listLayout[currentState].y -
+                      listLayout[currentState].height -
+                      150 +
+                      11,
+                    left: listLayout[currentState].x - 10,
+                    position: 'absolute',
+                    minWidth: 150,
+                    transform: [
+                      {
+                        translateX:
+                          listLayout[currentState].width < 150 &&
+                          listLayout[currentState].x > width - 150
+                            ? -120
+                            : listLayout[currentState].x - 150 < 0
+                            ? 0
+                            : -listLayout[currentState].width,
+                      },
+                    ],
+                  }}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 18,
+                    }}
+                    adjustsFontSizeToFit>
+                    Hey! This is the first step
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'flex-end',
+                      alignContent: 'space-between',
+                      height: 50,
+                      position: 'absolute',
+                      bottom: 0,
+                      right: 0,
+                      zIndex: 999,
+                    }}>
+                    <Pressable
+                      onPress={onSkip}
+                      style={{
+                        width: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={{color: 'green'}}>Skip</Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={onNext}
+                      style={{
+                        width: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={{color: 'green'}}>Next</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              )}
             </>
           )}
         </View>
@@ -189,7 +278,7 @@ const Copilot = () => {
       <Image
         onLayout={e => setListLayout([...listLayout, e.nativeEvent.layout])}
         source={{
-          uri: 'https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/333256948_758694515709613_5812778938808615305_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=0debeb&_nc_ohc=FuwlJ__kxDIAX-T8Z-8&_nc_ht=scontent.fsgn5-12.fna&oh=00_AfB7Zyk3bSYUAE59Hky3SrJUwV92opTM_8C_NNGuarXL4A&oe=642083EE',
+          uri: 'https://github.gallerycdn.vsassets.io/extensions/github/copilot-nightly/1.78.10293/1679622408396/Microsoft.VisualStudio.Services.Icons.Default',
         }}
         style={{
           width: 200,
@@ -200,6 +289,36 @@ const Copilot = () => {
         }}
       />
       <Button title="START THE TUTORIAL" onPress={onPress} />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          paddingVertical: 10,
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+        }}
+        onLayout={e => console.log(e.nativeEvent.layout)}>
+        {['user-circle-o', 'gamepad', 'film', 'cog', 'lock'].map(
+          (item, index) => {
+            return (
+              <Pressable
+                key={index}
+                onLayout={e => {
+                  let height = e.nativeEvent.layout.height;
+                  let width = e.nativeEvent.layout.width;
+                  let x = e.nativeEvent.layout.x;
+                  let y = -e.nativeEvent.layout.y + HEIGHT_SCREEN - 30;
+                  console.log('key', HEIGHT_SCREEN, {height, width, x, y});
+                  setListLayout([...listLayout, {height, width, x, y}]);
+                }}>
+                <FontAwesome name={item} size={30} />
+              </Pressable>
+            );
+          },
+        )}
+      </View>
     </View>
   );
 };
