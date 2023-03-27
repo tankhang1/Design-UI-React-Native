@@ -7,12 +7,13 @@ import Reflectly_Tabbar from './src/Reflectly_Tabbar/Reflectly_Tabbar';
 import SpreadCard from './src/SpreadCard/SpreadCard';
 import Copilot from './src/Copilot/Copilot';
 import Scanner from './src/Scanner/Scanner';
+import LineChart from './src/LineChart/LineChart';
 const App = () => {
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: 'black',
       }}>
       {/* <Rive
         resourceName={'login_screen_character'}
@@ -36,7 +37,16 @@ const App = () => {
         fontWeight={'400'}
         color={'black'}
       /> */}
-      <Copilot />
+      <LineChart
+        data={[
+          {month: 'Jan', value: 500},
+          {month: 'Feb', value: 400},
+          {month: 'Mar', value: 600},
+          {month: 'Apr', value: 240},
+          {month: 'Jun', value: 600},
+          {month: 'Jul', value: 700},
+        ]}
+      />
     </View>
   );
 };

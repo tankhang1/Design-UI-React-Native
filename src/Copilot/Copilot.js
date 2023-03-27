@@ -309,7 +309,7 @@ const Copilot = () => {
                   let height = e.nativeEvent.layout.height;
                   let width = e.nativeEvent.layout.width;
                   let x = e.nativeEvent.layout.x;
-                  let y = -e.nativeEvent.layout.y + HEIGHT_SCREEN - 30;
+                  let y = -e.nativeEvent.layout.y + HEIGHT_SCREEN - 32.5;
                   console.log('key', HEIGHT_SCREEN, {height, width, x, y});
                   setListLayout([...listLayout, {height, width, x, y}]);
                 }}>
