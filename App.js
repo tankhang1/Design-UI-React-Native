@@ -8,17 +8,17 @@ import SpreadCard from './src/SpreadCard/SpreadCard';
 import Copilot from './src/Copilot/Copilot';
 import Scanner from './src/Scanner/Scanner';
 import LineChart from './src/LineChart/LineChart';
-import Table from './src/Table/Table';
 import First_Screen from './src/Redux-ToolKit/Screens/First_Screen';
 import {Provider} from 'react-redux';
 import {store} from './src/Redux-ToolKit/Store';
+import BarChart from './src/BarChart/BarChart';
 const App = () => {
   return (
     <Provider store={store}>
       <View
         style={{
           flex: 1,
-          backgroundColor: 'black',
+          backgroundColor: 'grey',
         }}>
         {/* <Rive
         resourceName={'login_screen_character'}
@@ -64,7 +64,21 @@ const App = () => {
         height={300}
         borderColor="grey"
       /> */}
-        <First_Screen />
+        <BarChart
+          data={[
+            {month: 'Jan', value: 500},
+            {month: 'Feb', value: 400},
+            {month: 'Mar', value: 600},
+            {month: 'Apr', value: 240},
+            {month: 'Jun', value: 600},
+            {month: 'Jul', value: 700},
+            {month: 'Aug', value: 700},
+            {month: 'Sep', value: 158},
+            {month: 'Oct', value: 700},
+            {month: 'Nov', value: 700},
+            {month: 'Dec', value: 200},
+          ]}
+        />
       </View>
     </Provider>
   );
