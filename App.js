@@ -8,14 +8,19 @@ import SpreadCard from './src/SpreadCard/SpreadCard';
 import Copilot from './src/Copilot/Copilot';
 import Scanner from './src/Scanner/Scanner';
 import LineChart from './src/LineChart/LineChart';
+import Table from './src/Table/Table';
+import First_Screen from './src/Redux-ToolKit/Screens/First_Screen';
+import {Provider} from 'react-redux';
+import {store} from './src/Redux-ToolKit/Store';
 const App = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: 'black',
-      }}>
-      {/* <Rive
+    <Provider store={store}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'black',
+        }}>
+        {/* <Rive
         resourceName={'login_screen_character'}
         artboardName="Artboard"
         stateMachineName="State Machine 1"
@@ -26,8 +31,8 @@ const App = () => {
       <View>
         <Text style={{color: 'black'}}>Run time</Text>
       </View> */}
-      {/* <SpreadCard /> */}
-      {/* <PieCharComponent
+        {/* <SpreadCard /> */}
+        {/* <PieCharComponent
         outRadius={80}
         inRadius={25}
         width={250}
@@ -37,7 +42,7 @@ const App = () => {
         fontWeight={'400'}
         color={'black'}
       /> */}
-      <LineChart
+        {/* <LineChart
         data={[
           {month: 'Jan', value: 500},
           {month: 'Feb', value: 400},
@@ -46,8 +51,22 @@ const App = () => {
           {month: 'Jun', value: 600},
           {month: 'Jul', value: 700},
         ]}
-      />
-    </View>
+      /> */}
+        {/* <Table
+        tableHeader={['', 'Header 1', 'Header 2', 'Header 3']}
+        tableTitle={['Title 1', 'Title 2', 'Title 3']}
+        tableData={[
+          ['1', '2', '3'],
+          ['4', '5', '6'],
+          ['7', '8', '9'],
+        ]}
+        width={400}
+        height={300}
+        borderColor="grey"
+      /> */}
+        <First_Screen />
+      </View>
+    </Provider>
   );
 };
 

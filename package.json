@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.5",
     "@react-navigation/native": "^6.1.4",
+    "@reduxjs/toolkit": "^1.9.3",
     "@shopify/react-native-skia": "^0.1.173",
     "lottie-react-native": "^5.1.5",
     "react": "18.1.0",
@@ -23,6 +24,8 @@
     "react-native-svg": "^13.8.0",
     "react-native-touch-id": "^4.4.1",
     "react-native-vector-icons": "^9.2.0",
+    "react-redux": "^8.0.5",
+    "redux-logger": "^3.0.6",
     "rive-react-native": "^4.0.0"
   },
   "devDependencies": {

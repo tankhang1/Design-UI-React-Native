@@ -184,7 +184,7 @@ const LineChart = ({
             const y = y1 - ((y1 - y3) / max_Data_Value) * item.value;
             if (index === 0) {
               return (
-                <G key={index}>
+                <G key={index} onPress={() => console.log(item)}>
                   <Rect
                     width={40}
                     height={30}
@@ -200,7 +200,7 @@ const LineChart = ({
               );
             } else {
               return (
-                <G key={index}>
+                <G key={index} onPress={() => console.log(item)}>
                   <Rect
                     width={40}
                     height={30}
