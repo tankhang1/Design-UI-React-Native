@@ -12,13 +12,16 @@ import First_Screen from './src/Redux-ToolKit/Screens/First_Screen';
 import {Provider} from 'react-redux';
 import {store} from './src/Redux-ToolKit/Store';
 import BarChart from './src/BarChart/BarChart';
+import Calander_Picker from './src/Calendar/Calendar_Picker/Calander_Picker';
 const App = () => {
   return (
     <Provider store={store}>
       <View
         style={{
           flex: 1,
-          backgroundColor: 'grey',
+          backgroundColor: 'white',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
         {/* <Rive
         resourceName={'login_screen_character'}
@@ -64,7 +67,7 @@ const App = () => {
         height={300}
         borderColor="grey"
       /> */}
-        <BarChart
+        {/* <BarChart
           data={[
             {month: 'Jan', value: 500},
             {month: 'Feb', value: 400},
@@ -78,7 +81,8 @@ const App = () => {
             {month: 'Nov', value: 700},
             {month: 'Dec', value: 200},
           ]}
-        />
+        /> */}
+        <Calander_Picker />
       </View>
     </Provider>
   );
