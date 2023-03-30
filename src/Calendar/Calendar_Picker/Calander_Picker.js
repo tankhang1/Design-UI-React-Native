@@ -51,7 +51,7 @@ const reducer = (state, action) => {
       break;
   }
 };
-const Calander_Picker = ({}) => {
+const Calander_Picker = () => {
   const [state, dispatch] = useReducer(reducer, {
     curMonth: new Date().getMonth(),
     curYear: new Date().getFullYear(),
@@ -65,6 +65,19 @@ const Calander_Picker = ({}) => {
   const rightPress = useCallback(() => {
     dispatch({type: RIGHT_ACTION});
   }, [state.curMonth]);
+  const onDatePress = useCallback(
+    item => {
+      setDatePress(item);
+
+      if (item.getMonth() < state.curMonth) {
+        dispatch({type: LEFT_ACTION});
+      }
+      if (item.getMonth() > state.curMonth) {
+        dispatch({type: RIGHT_ACTION});
+      }
+    },
+    [datePress],
+  );
   const renderDates = useCallback(
     ({item, index}) => {
       return (
@@ -77,18 +90,19 @@ const Calander_Picker = ({}) => {
                 datePress?.getTime() === item.getTime() ? '#3CDA5E' : 'white',
             },
           ]}
-          onPress={() => setDatePress(item)}>
+          onPress={() => onDatePress(item)}>
           <Text
-            style={{
-              fontSize: 14,
-              color:
-                datePress?.getTime() === item.getTime()
-                  ? 'white'
-                  : state.curMonth !== item.getMonth()
-                  ? 'grey'
-                  : 'black',
-              fontWeight: '500',
-            }}>
+            style={[
+              styles.dateTxtStyle,
+              {
+                color:
+                  datePress?.getTime() === item.getTime()
+                    ? 'white'
+                    : state.curMonth !== item.getMonth()
+                    ? 'grey'
+                    : 'black',
+              },
+            ]}>
             {item.getDate()}
           </Text>
         </Pressable>
@@ -172,5 +186,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 5,
     borderRadius: 100,
+  },
+  dateTxtStyle: {
+    fontSize: 14,
+
+    fontWeight: '500',
   },
 });
