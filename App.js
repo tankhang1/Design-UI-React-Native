@@ -13,17 +13,21 @@ import {Provider} from 'react-redux';
 import {store} from './src/Redux-ToolKit/Store';
 import BarChart from './src/BarChart/BarChart';
 import Calander_Picker from './src/Calendar/Calendar_Picker/Calander_Picker';
+import {useState} from 'react';
 const App = () => {
+  const [pressItem, setPressItem] = useState();
+
   return (
-    <Provider store={store}>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'white',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        {/* <Rive
+    // <Provider store={store}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'white',
+        // paddingTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      {/* <Rive
         resourceName={'login_screen_character'}
         artboardName="Artboard"
         stateMachineName="State Machine 1"
@@ -34,8 +38,8 @@ const App = () => {
       <View>
         <Text style={{color: 'black'}}>Run time</Text>
       </View> */}
-        {/* <SpreadCard /> */}
-        {/* <PieCharComponent
+      {/* <SpreadCard /> */}
+      {/* <PieCharComponent
         outRadius={80}
         inRadius={25}
         width={250}
@@ -45,17 +49,25 @@ const App = () => {
         fontWeight={'400'}
         color={'black'}
       /> */}
-        {/* <LineChart
+      {/* <LineChart
         data={[
-          {month: 'Jan', value: 500},
-          {month: 'Feb', value: 400},
-          {month: 'Mar', value: 600},
-          {month: 'Apr', value: 240},
-          {month: 'Jun', value: 600},
-          {month: 'Jul', value: 700},
+          {month: 'Tháng 1', value: 5},
+          {month: 'Tháng 2', value: 1},
+          {month: 'Tháng 3', value: 6000},
+          {month: 'Tháng 4', value: 600},
+          {month: 'Tháng 5', value: 6500},
+          {month: 'Tháng 6', value: 600},
+          {month: 'Tháng 7', value: 700},
+          {month: 'Tháng 8', value: 700},
+          {month: 'Tháng 9', value: 158},
+          {month: 'Tháng 10', value: 700},
+          {month: 'Tháng 11', value: 700},
+          {month: 'Tháng 12', value: 200},
         ]}
+        pressItem={pressItem}
+        setPressItem={setPressItem}
       /> */}
-        {/* <Table
+      {/* <Table
         tableHeader={['', 'Header 1', 'Header 2', 'Header 3']}
         tableTitle={['Title 1', 'Title 2', 'Title 3']}
         tableData={[
@@ -67,7 +79,7 @@ const App = () => {
         height={300}
         borderColor="grey"
       /> */}
-        {/* <BarChart
+      {/* <BarChart
           data={[
             {month: 'Jan', value: 500},
             {month: 'Feb', value: 400},
@@ -82,9 +94,9 @@ const App = () => {
             {month: 'Dec', value: 200},
           ]}
         /> */}
-        <Calander_Picker />
-      </View>
-    </Provider>
+      <Calander_Picker />
+    </View>
+    // </Provider>
   );
 };
 

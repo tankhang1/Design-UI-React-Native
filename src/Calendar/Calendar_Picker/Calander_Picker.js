@@ -68,16 +68,16 @@ const Calander_Picker = () => {
   const onDatePress = useCallback(
     item => {
       setDatePress(item);
-
-      if (item.getMonth() < state.curMonth) {
+      if (item.getUTCMonth() < state.curMonth) {
         dispatch({type: LEFT_ACTION});
       }
-      if (item.getMonth() > state.curMonth) {
+      if (item.getUTCMonth() > state.curMonth) {
         dispatch({type: RIGHT_ACTION});
       }
     },
-    [datePress],
+    [datePress, state.curMonth],
   );
+
   const renderDates = useCallback(
     ({item, index}) => {
       return (
@@ -90,7 +90,9 @@ const Calander_Picker = () => {
                 datePress?.getTime() === item.getTime() ? '#3CDA5E' : 'white',
             },
           ]}
-          onPress={() => onDatePress(item)}>
+          onPress={() => {
+            onDatePress(item);
+          }}>
           <Text
             style={[
               styles.dateTxtStyle,
@@ -98,12 +100,12 @@ const Calander_Picker = () => {
                 color:
                   datePress?.getTime() === item.getTime()
                     ? 'white'
-                    : state.curMonth !== item.getMonth()
+                    : state.curMonth !== item.getUTCMonth()
                     ? 'grey'
                     : 'black',
               },
             ]}>
-            {item.getDate()}
+            {item.getUTCDate()}
           </Text>
         </Pressable>
       );
