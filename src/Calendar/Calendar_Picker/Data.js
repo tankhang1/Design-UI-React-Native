@@ -29,13 +29,13 @@ const calculateDate = (
     i <= maxDatePre.getDate();
     i++
   ) {
-    dateInMonth.push(new Date(year, month - 1, i + 1));
+    dateInMonth.push(new Date(year, month - 1, i));
   }
   for (let i = 1; i <= maxDate.getDate(); i++) {
-    dateInMonth.push(new Date(year, month, i + 1));
+    dateInMonth.push(new Date(year, month, i));
   }
   for (let i = 1; i <= 7 - maxDate.getDay() - 1; i++) {
-    dateInMonth.push(new Date(year, month + 1, i + 1));
+    dateInMonth.push(new Date(year, month + 1, i));
   }
 
   return dateInMonth;

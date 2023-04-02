@@ -12,6 +12,7 @@ import {useState} from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {memo} from 'react';
 import {useCallback} from 'react';
+import moment from 'moment/moment';
 const {width: WIDTH_WD, height: HEIGHT_WD} = Dimensions.get('window');
 const sizePress = (WIDTH_WD * 0.8) / 7;
 const LEFT_ACTION = 'LEFT_ACTION';
@@ -68,10 +69,10 @@ const Calander_Picker = () => {
   const onDatePress = useCallback(
     item => {
       setDatePress(item);
-      if (item.getUTCMonth() < state.curMonth) {
+      if (item.getMonth() < state.curMonth) {
         dispatch({type: LEFT_ACTION});
       }
-      if (item.getUTCMonth() > state.curMonth) {
+      if (item.getMonth() > state.curMonth) {
         dispatch({type: RIGHT_ACTION});
       }
     },
@@ -100,12 +101,12 @@ const Calander_Picker = () => {
                 color:
                   datePress?.getTime() === item.getTime()
                     ? 'white'
-                    : state.curMonth !== item.getUTCMonth()
+                    : state.curMonth !== item.getMonth()
                     ? 'grey'
                     : 'black',
               },
             ]}>
-            {item.getUTCDate()}
+            {item.getDate()}
           </Text>
         </Pressable>
       );
@@ -142,6 +143,13 @@ const Calander_Picker = () => {
           numColumns={7}
           removeClippedSubviews={true}
         />
+        <Text
+          style={{
+            fontSize: 16,
+            color: 'black',
+          }}>
+          {moment(datePress).format('DD/MM/YYYY')}
+        </Text>
       </View>
     </View>
   );

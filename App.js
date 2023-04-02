@@ -16,7 +16,8 @@ import Calander_Picker from './src/Calendar/Calendar_Picker/Calander_Picker';
 import {useState} from 'react';
 const App = () => {
   const [pressItem, setPressItem] = useState();
-
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [openCalendar, setOpenCalendar] = useState(false);
   return (
     // <Provider store={store}>
     <View
@@ -79,22 +80,35 @@ const App = () => {
         height={300}
         borderColor="grey"
       /> */}
-      {/* <BarChart
-          data={[
-            {month: 'Jan', value: 500},
-            {month: 'Feb', value: 400},
-            {month: 'Mar', value: 600},
-            {month: 'Apr', value: 240},
-            {month: 'Jun', value: 600},
-            {month: 'Jul', value: 700},
-            {month: 'Aug', value: 700},
-            {month: 'Sep', value: 158},
-            {month: 'Oct', value: 700},
-            {month: 'Nov', value: 700},
-            {month: 'Dec', value: 200},
-          ]}
-        /> */}
-      <Calander_Picker />
+      <BarChart
+        dataIncome={[
+          {month: 'Jan', value: 500},
+          {month: 'Feb', value: 400},
+          {month: 'Mar', value: 600},
+          {month: 'Apr', value: 240},
+          {month: 'Jun', value: 600},
+          {month: 'Jul', value: 700},
+          {month: 'Aug', value: 700},
+          {month: 'Sep', value: 158},
+          {month: 'Oct', value: 700},
+          {month: 'Nov', value: 700},
+          {month: 'Dec', value: 200},
+        ]}
+        dataOutcome={[
+          {month: 'Jan', value: 123},
+          {month: 'Feb', value: 443},
+          {month: 'Mar', value: 1344},
+          {month: 'Apr', value: 998},
+          {month: 'Jun', value: 600},
+          {month: 'Jul', value: 700},
+          {month: 'Aug', value: 13},
+          {month: 'Sep', value: 12},
+          {month: 'Oct', value: 700},
+          {month: 'Nov', value: 700},
+          {month: 'Dec', value: 200},
+        ]}
+      />
+      {/* <Calander_Picker /> */}
     </View>
     // </Provider>
   );
