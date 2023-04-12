@@ -1,19 +1,10 @@
 import {View, Text, Button} from 'react-native';
 import React from 'react';
-import NavigationBottom from './src/Funny_Tabbar/NavigationBottom';
-import Food_Material from './src/Food_Material/Food_Material';
-import Drag_Drop_V1 from './src/Drag&Drop/Drag_Drop_V1';
-import Reflectly_Tabbar from './src/Reflectly_Tabbar/Reflectly_Tabbar';
-import SpreadCard from './src/SpreadCard/SpreadCard';
-import Copilot from './src/Copilot/Copilot';
-import Scanner from './src/Scanner/Scanner';
-import LineChart from './src/LineChart/LineChart';
-import First_Screen from './src/Redux-ToolKit/Screens/First_Screen';
-import {Provider} from 'react-redux';
-import {store} from './src/Redux-ToolKit/Store';
+
 import BarChart from './src/BarChart/BarChart';
-import Calander_Picker from './src/Calendar/Calendar_Picker/Calander_Picker';
 import {useState} from 'react';
+import FunnyScroll from './src/FunnyScrollView/FunnyScroll';
+
 const App = () => {
   const [pressItem, setPressItem] = useState();
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -24,9 +15,9 @@ const App = () => {
       style={{
         flex: 1,
         backgroundColor: 'white',
-        // paddingTop: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
+        // // paddingTop: 10,
+        // justifyContent: 'center',
+        // alignItems: 'center',
       }}>
       {/* <Rive
         resourceName={'login_screen_character'}
@@ -54,9 +45,9 @@ const App = () => {
         data={[
           {month: 'Tháng 1', value: 5},
           {month: 'Tháng 2', value: 1},
-          {month: 'Tháng 3', value: 6000},
+          {month: 'Tháng 3', value: 6000000},
           {month: 'Tháng 4', value: 600},
-          {month: 'Tháng 5', value: 6500},
+          {month: 'Tháng 5', value: 12350},
           {month: 'Tháng 6', value: 600},
           {month: 'Tháng 7', value: 700},
           {month: 'Tháng 8', value: 700},
@@ -68,6 +59,7 @@ const App = () => {
         pressItem={pressItem}
         setPressItem={setPressItem}
       /> */}
+      {/* <Authentification /> */}
       {/* <Table
         tableHeader={['', 'Header 1', 'Header 2', 'Header 3']}
         tableTitle={['Title 1', 'Title 2', 'Title 3']}
@@ -80,7 +72,7 @@ const App = () => {
         height={300}
         borderColor="grey"
       /> */}
-      <BarChart
+      {/* <BarChart
         dataIncome={[
           {month: 'Jan', value: 500},
           {month: 'Feb', value: 400},
@@ -107,11 +99,46 @@ const App = () => {
           {month: 'Nov', value: 700},
           {month: 'Dec', value: 200},
         ]}
-      />
+      /> */}
+      <FunnyScroll />
       {/* <Calander_Picker /> */}
     </View>
     // </Provider>
   );
+};
+const signUpConfig = {
+  header: 'My Customized Sign Up',
+  hideAllDefaults: true,
+  signUpFields: [
+    {
+      label: 'Full name',
+      key: 'name',
+      required: true,
+      displayOrder: 1,
+      type: 'string',
+    },
+    {
+      label: 'Email',
+      key: 'email',
+      required: true,
+      displayOrder: 2,
+      type: 'string',
+    },
+    {
+      label: 'Username',
+      key: 'preferred_username',
+      required: true,
+      displayOrder: 3,
+      type: 'string',
+    },
+    {
+      label: 'Password',
+      key: 'password',
+      required: true,
+      displayOrder: 4,
+      type: 'password',
+    },
+  ],
 };
 
 export default App;

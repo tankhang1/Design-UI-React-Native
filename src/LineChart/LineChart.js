@@ -1,13 +1,5 @@
-import {
-  View,
-  Text,
-  Dimensions,
-  Animated,
-  ScrollView,
-  StyleSheet,
-  Pressable,
-} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import {View, Animated, ScrollView, StyleSheet} from 'react-native';
+import React, {useEffect, useRef, useState, memo, useCallback} from 'react';
 import {
   Circle,
   Defs,
@@ -19,6 +11,8 @@ import {
   Svg,
   Text as TextSVG,
 } from 'react-native-svg';
+import {useMemo} from 'react';
+const moneyUnit = ['trăm', 'triệu', 'tỷ', 'nghìn tỷ'];
 const LineChart = ({
   heightChart = 400,
   paddingLeft = 45,
@@ -30,17 +24,16 @@ const LineChart = ({
   data = [],
   colorMarker = '#FF5C00',
   lineColor = '#FF5C00',
-  lineWidth = 1,
+  lineWidth = 2,
   markerWidth = 1.5,
-  gapItem = 60,
+  gapItem = 70,
   strokeColor = 'hsl(0,0%,73%)',
   labelFontSize = 12,
   buttonBackColor = 'hsl(44,99%,50%)',
   buttonLabelColor = 'black',
   buttonRadius = 5,
   label_xAxis = 'Month',
-  label_yAxis = 'VND',
-  showStrokeBack = false,
+  showStrokeBack = true,
   pressItem,
   setPressItem,
 }) => {
@@ -51,17 +44,81 @@ const LineChart = ({
   const x3 = paddingLeft;
   const y3 = paddingTop;
   const gapBetweenPoint_xAxis = gapItem;
-
   const x_Axis_Animated = useRef(new Animated.Value(x1)).current;
   const y_Axis_Animated = useRef(new Animated.Value(y1)).current;
   const line_Animated = useRef(new Animated.Value(0)).current;
-  const max_Data_Value = Math.max(...data.map(item => item.value));
+  const max_Data_Value = useMemo(
+    () => Math.max(...data.map(item => item.value)),
+    [],
+  );
   const gapBetweenPoint_yAxix = (y1 - y3) / data.length;
   const valueBetweenPoint_yAxix = max_Data_Value / data.length;
+  const computeValue_yAxis = useCallback(() => {
+    if (max_Data_Value > Math.pow(10, 11)) {
+      return {
+        reduce: Math.pow(10, 9),
+        title_yAxis: 'nghìn tỷ',
+      };
+    }
+    if (max_Data_Value > Math.pow(10, 6)) {
+      return {
+        reduce: Math.pow(10, 6),
+        title_yAxis: 'tỷ',
+      };
+    }
+    if (max_Data_Value > Math.pow(10, 3)) {
+      return {
+        reduce: Math.pow(10, 3),
+        title_yAxis: 'triệu',
+      };
+    }
+    return {
+      reduce: 1,
+      title_yAxis: 'nghìn',
+    };
+  }, []);
+  const value_yAxis = useMemo(() => computeValue_yAxis(), []);
+  const computeValue = useCallback(value => {
+    if (value > Math.pow(10, 11)) {
+      return (
+        Math.round((value / Math.pow(10, 11) + Number.EPSILON) * 100) / 100 +
+        ' ' +
+        moneyUnit[3]
+      );
+    }
+    if (value > Math.pow(10, 6)) {
+      return (
+        Math.round((value / Math.pow(10, 6) + Number.EPSILON) * 100) / 100 +
+        ' ' +
+        moneyUnit[2]
+      );
+    }
+    if (value > Math.pow(10, 3)) {
+      return (
+        Math.round((value / Math.pow(10, 3) + Number.EPSILON) * 100) / 100 +
+        ' ' +
+        moneyUnit[1]
+      );
+    }
+    if (value > Math.pow(10, 2)) {
+      return (
+        Math.round((value / Math.pow(10, 2) + Number.EPSILON) * 100) / 100 +
+        ' ' +
+        moneyUnit[0]
+      );
+    }
+    return value;
+  }, []);
   useEffect(() => {
     initialAnimation();
-  }, [data]);
-  const initialAnimation = () => {
+    line_Animated.setValue(pathLength);
+    Animated.timing(line_Animated, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+  const initialAnimation = useCallback(() => {
     Animated.parallel(
       Animated.timing(x_Axis_Animated, {
         toValue: x2,
@@ -74,18 +131,11 @@ const LineChart = ({
         useNativeDriver: true,
       }).start(),
     );
-  };
-  useEffect(() => {
-    line_Animated.setValue(pathLength);
-    Animated.timing(line_Animated, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }, pathLength);
+  }, []);
+
   const AnimatedLine = Animated.createAnimatedComponent(Line);
   const AnimatedPath = Animated.createAnimatedComponent(Path);
-  const createPathLine = () => {
+  const createPathLine = useCallback(() => {
     let d = '';
     data.map((item, index) => {
       const y = y1 - ((y1 - y3) / max_Data_Value) * item.value;
@@ -96,7 +146,7 @@ const LineChart = ({
       }
     });
     return d;
-  };
+  }, [data]);
   const line = useRef(null);
   const [pathLength, setPathLength] = useState(0);
   return (
@@ -126,10 +176,16 @@ const LineChart = ({
               y={y3 - 30}
               textAnchor={'middle'}
               fontSize={labelFontSize}>
-              {label_yAxis}
+              {value_yAxis.title_yAxis}
             </TextSVG>
           </G>
           {[...new Array(data.length + 1)].map((_, index) => {
+            const value =
+              Math.round(
+                ((valueBetweenPoint_yAxix * index) / value_yAxis.reduce +
+                  Number.EPSILON) *
+                  100,
+              ) / 100;
             return (
               <G key={`y_Axis_Lable_Line_${index}`}>
                 <Line
@@ -139,13 +195,12 @@ const LineChart = ({
                   y2={y1 - gapBetweenPoint_yAxix * index}
                   stroke={axisColor}
                 />
-
                 <TextSVG
                   textAnchor="middle"
                   x={x1 - 25}
                   y={y1 - gapBetweenPoint_yAxix * index}
                   fontSize={labelFontSize}>
-                  {Math.floor(valueBetweenPoint_yAxix * index)}
+                  {value}
                 </TextSVG>
               </G>
             );
@@ -154,6 +209,7 @@ const LineChart = ({
       </View>
       <ScrollView
         horizontal
+        showsHorizontalScrollIndicator={false}
         style={{
           marginLeft: x1,
         }}
@@ -251,20 +307,17 @@ const LineChart = ({
             />
             {data.map((item, index) => {
               const y = y1 - ((y1 - y3) / max_Data_Value) * item.value;
+              const value = computeValue(item.value);
               if (index === 0) {
                 return (
                   <G key={index}>
                     <Rect
-                      width={
-                        (labelFontSize / 2) * item.value.toString().length + 20
-                      }
+                      width={(labelFontSize / 2) * value.toString().length + 10}
                       height={30}
                       x={
                         x1 * 2 +
                         gapBetweenPoint_xAxis * index -
-                        ((labelFontSize / 2) * item.value.toString().length +
-                          20) /
-                          2
+                        ((labelFontSize / 2) * value.toString().length + 10) / 2
                       }
                       y={y - 50}
                       rx={buttonRadius}
@@ -277,7 +330,7 @@ const LineChart = ({
                       textAnchor="middle"
                       fontSize={labelFontSize}
                       fill={buttonLabelColor}>
-                      {item.value}
+                      {value}
                     </TextSVG>
                   </G>
                 );
@@ -285,16 +338,12 @@ const LineChart = ({
                 return (
                   <G key={index} onPress={() => setPressItem(item)}>
                     <Rect
-                      width={
-                        (labelFontSize / 2) * item.value.toString().length + 20
-                      }
+                      width={(labelFontSize / 2) * value.toString().length + 10}
                       height={30}
                       x={
                         x1 * 2 +
                         gapBetweenPoint_xAxis * index -
-                        ((labelFontSize / 2) * item.value.toString().length +
-                          20) /
-                          2
+                        ((labelFontSize / 2) * value.toString().length + 10) / 2
                       }
                       y={y - 50}
                       rx={buttonRadius}
@@ -306,7 +355,7 @@ const LineChart = ({
                       textAnchor="middle"
                       fill={buttonLabelColor}
                       fontSize={labelFontSize}>
-                      {item.value}
+                      {value}
                     </TextSVG>
                   </G>
                 );
@@ -319,4 +368,4 @@ const LineChart = ({
   );
 };
 
-export default LineChart;
+export default memo(LineChart);
