@@ -4,6 +4,7 @@ import React from 'react';
 import BarChart from './src/BarChart/BarChart';
 import {useState} from 'react';
 import FunnyScroll from './src/FunnyScrollView/FunnyScroll';
+import Fluid_Body_Animation from './src/FluidBody/Fluid_Body_Animation';
 
 const App = () => {
   const [pressItem, setPressItem] = useState();
@@ -100,7 +101,7 @@ const App = () => {
           {month: 'Dec', value: 200},
         ]}
       /> */}
-      <FunnyScroll />
+      <Fluid_Body_Animation />
       {/* <Calander_Picker /> */}
     </View>
     // </Provider>
