@@ -9,8 +9,12 @@ const Example_1 = () => {
     riveRef.current?.play();
   };
   return (
-    <View>
-      <Rive
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'white',
+      }}>
+      {/* <Rive
         resourceName="weather_app"
         // url="https://rive.app/community/3113-6567-weather-app-demo"
         artboardName="proto1"
@@ -22,7 +26,7 @@ const Example_1 = () => {
         }}
         ref={riveRef}
         fit={Fit.Cover}
-      />
+      /> */}
       <Button title="Play" onPress={handlePlay} />
     </View>
   );

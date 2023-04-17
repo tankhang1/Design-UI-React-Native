@@ -5,7 +5,10 @@ import BarChart from './src/BarChart/BarChart';
 import {useState} from 'react';
 import FunnyScroll from './src/FunnyScrollView/FunnyScroll';
 import Fluid_Body_Animation from './src/FluidBody/Fluid_Body_Animation';
-
+import FluidBody_v2 from './src/FluidBody/FluidBody_v2/FluidBody_v2';
+import WaveAnimation from './src/WaveAnimation/WaveAnimation';
+import Example_1 from './src/Rive/Example_1';
+import Rive, {Fit} from 'rive-react-native';
 const App = () => {
   const [pressItem, setPressItem] = useState();
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -20,6 +23,20 @@ const App = () => {
         // justifyContent: 'center',
         // alignItems: 'center',
       }}>
+      <Rive
+        resourceName={'pencil_dude_hello'}
+        artboardName="hello_draw"
+        stateMachineName="State Machine 1"
+        autoplay={true}
+        style={{width: '100%', height: 200}}
+        fit={Fit.Contain}
+      />
+      <Text
+        style={{
+          color: 'red',
+        }}>
+        OK
+      </Text>
       {/* <Rive
         resourceName={'login_screen_character'}
         artboardName="Artboard"
@@ -101,7 +118,7 @@ const App = () => {
           {month: 'Dec', value: 200},
         ]}
       /> */}
-      <Fluid_Body_Animation />
+      {/* <Example_1 /> */}
       {/* <Calander_Picker /> */}
     </View>
     // </Provider>
