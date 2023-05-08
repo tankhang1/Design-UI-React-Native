@@ -59,5 +59,21 @@ https://user-images.githubusercontent.com/74121720/236687652-2a6b9725-6e89-41ec-
 
 https://user-images.githubusercontent.com/74121720/236687683-fb86bd92-1d8b-4f4b-b7a4-0c1495c963fc.mp4
 
+## Beauty Progress
+
+
+
+https://user-images.githubusercontent.com/74121720/236880640-ac1495d8-1807-4c9e-b139-b8c791b68a6a.mp4
+
+## Beauty Progress 2
+
+
+
+https://user-images.githubusercontent.com/74121720/236880683-74e93c94-4c88-48da-98a3-697c60112a95.mp4
+
+## Logo Figma Button Shadow
+
+
+https://user-images.githubusercontent.com/74121720/236880756-1a133c30-c1b0-48bd-9cca-7eac57c8a504.mp4
 
 
