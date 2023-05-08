@@ -27,6 +27,14 @@ const Example_1 = () => {
         ref={riveRef}
         fit={Fit.Cover}
       /> */}
+      {/* <Rive
+        resourceName={'pencil_dude_hello'}
+        artboardName="hello_draw"
+        stateMachineName="State Machine 1"
+        autoplay={true}
+        style={{width: '100%', height: 200}}
+        fit={Fit.Contain}
+      /> */}
       <Button title="Play" onPress={handlePlay} />
     </View>
   );

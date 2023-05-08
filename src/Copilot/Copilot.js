@@ -273,7 +273,7 @@ const Copilot = () => {
           width: '70%',
           alignSelf: 'center',
         }}>
-        Welcome to the demo of "React Native Pilot"
+        Welcome to my demo
       </Text>
       <Image
         onLayout={e => setListLayout([...listLayout, e.nativeEvent.layout])}

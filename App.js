@@ -9,6 +9,23 @@ import FluidBody_v2 from './src/FluidBody/FluidBody_v2/FluidBody_v2';
 import WaveAnimation from './src/WaveAnimation/WaveAnimation';
 import Example_1 from './src/Rive/Example_1';
 import Rive, {Fit} from 'rive-react-native';
+import WaveAnimation_v1 from './src/WaveAnimation/WaveAnimation_v1';
+import Carousel from './src/Carousel_Flastlist/Carousel';
+import Caculator from './src/Caculator/Caculator';
+import Calander_Picker from './src/Calendar/Calendar_Picker/Calander_Picker';
+import Copilot from './src/Copilot/Copilot';
+import Drag_Drop_V1 from './src/Drag&Drop/Drag_Drop_V1';
+import Food_Material from './src/Food_Material/Food_Material';
+import NavigationBottom from './src/Funny_Tabbar/NavigationBottom';
+import Funny_TextInput from './src/Funny_TextInput/Funny_TextInput';
+import LineChart from './src/LineChart/LineChart';
+import ScrollHeaderRive from './src/Rive/ScrollHeaderRive';
+import PieCharComponent from './src/PieChart/PieChart';
+import Scanner from './src/Scanner/Scanner';
+import SpreadCard from './src/SpreadCard/SpreadCard';
+import TeslaChargeScreen from './src/Neumorphisim/Tesla_Neumorphism/TeslaChargeScreen';
+import Tesla_Neumorphism from './src/Neumorphisim/Tesla_Neumorphism/Tesla_Neumorphism';
+import Logo_Neumorphism from './src/Neumorphisim/Logo_Figma/Logo_Neumorphism';
 const App = () => {
   const [pressItem, setPressItem] = useState();
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -18,25 +35,10 @@ const App = () => {
     <View
       style={{
         flex: 1,
-        backgroundColor: 'white',
         // // paddingTop: 10,
-        // justifyContent: 'center',
-        // alignItems: 'center',
       }}>
-      <Rive
-        resourceName={'pencil_dude_hello'}
-        artboardName="hello_draw"
-        stateMachineName="State Machine 1"
-        autoplay={true}
-        style={{width: '100%', height: 200}}
-        fit={Fit.Contain}
-      />
-      <Text
-        style={{
-          color: 'red',
-        }}>
-        OK
-      </Text>
+      {/* <Carousel /> */}
+
       {/* <Rive
         resourceName={'login_screen_character'}
         artboardName="Artboard"
@@ -49,6 +51,8 @@ const App = () => {
         <Text style={{color: 'black'}}>Run time</Text>
       </View> */}
       {/* <SpreadCard /> */}
+      {/* <Caculator /> */}
+      <Logo_Neumorphism />
       {/* <PieCharComponent
         outRadius={80}
         inRadius={25}
@@ -77,6 +81,7 @@ const App = () => {
         pressItem={pressItem}
         setPressItem={setPressItem}
       /> */}
+      {/* <ScrollHeaderRive /> */}
       {/* <Authentification /> */}
       {/* <Table
         tableHeader={['', 'Header 1', 'Header 2', 'Header 3']}
@@ -90,6 +95,7 @@ const App = () => {
         height={300}
         borderColor="grey"
       /> */}
+
       {/* <BarChart
         dataIncome={[
           {month: 'Jan', value: 500},
